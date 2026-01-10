@@ -78,15 +78,15 @@ const PROCEDURE_CODES = {
   '11400': { desc: 'Exc benign trunk/arm/leg ≤0.5cm', prices: { AETNA: 154.02, BC: 161.28, BCN: 161.28, CIGNA: 119.86, HAP: 119.86, UHC: 142.07, PTPAY: 165, OTHER: 161.28 }},
   '11401': { desc: 'Exc benign trunk/arm/leg 0.6-1cm', prices: { AETNA: 188.95, BC: 196.14, BCN: 196.14, CIGNA: 146.74, HAP: 146.74, UHC: 171.48, PTPAY: 195, OTHER: 196.14 }},
   '11402': { desc: 'Exc benign trunk/arm/leg 1.1-2cm', prices: { AETNA: 207.56, BC: 216.72, BCN: 216.72, CIGNA: 163.8, HAP: 163.8, UHC: 191.34, PTPAY: 195, OTHER: 216.72 }},
-  '11403': { desc: 'Exc benign trunk/arm/leg 2.1-3cm', prices: { AETNA: 240.03, BC: 249.48, BCN: 249.48, CIGNA: 186.46, HAP: 186.46, UHC: 270.02, PTPAY: 245, OTHER: 249.48 }},
+  '11403': { desc: 'Exc benign trunk/arm/leg 2.1-3cm', prices: { AETNA: 239.95, BC: 250.74, BCN: 250.74, CIGNA: 189.45, HAP: 189.45, UHC: 222.57, PTPAY: 325, OTHER: 250.74 }},
   '11404': { desc: 'Exc benign trunk/arm/leg 3.1-4cm', prices: { AETNA: 287.37, BC: 298.56, BCN: 298.56, CIGNA: 226.75, HAP: 226.75, UHC: 326.87, PTPAY: 295, OTHER: 298.56 }},
   '11406': { desc: 'Exc benign trunk/arm/leg >4cm', prices: { AETNA: 381.47, BC: 396.36, BCN: 396.36, CIGNA: 307.60, HAP: 307.60, UHC: 440.24, PTPAY: 375, OTHER: 396.36 }},
 
   // Benign Excision - Scalp/Neck/Hands/Feet/Genitalia
-  '11420': { desc: 'Exc benign scalp/neck/hf ≤0.5cm', prices: { AETNA: 154.02, BC: 160.98, BCN: 160.98, CIGNA: 123.91, HAP: 123.91, UHC: 175.02, PTPAY: 175, OTHER: 160.98 }},
-  '11421': { desc: 'Exc benign scalp/neck/hf 0.6-1cm', prices: { AETNA: 194.96, BC: 202.50, BCN: 202.50, CIGNA: 150.21, HAP: 150.21, UHC: 217.72, PTPAY: 210, OTHER: 202.50 }},
-  '11422': { desc: 'Exc benign scalp/neck/hf 1.1-2cm', prices: { AETNA: 218.27, BC: 228.42, BCN: 228.42, CIGNA: 173.13, HAP: 173.13, UHC: 248.09, PTPAY: 230, OTHER: 228.42 }},
-  '11423': { desc: 'Exc benign scalp/neck/hf 2.1-3cm', prices: { AETNA: 262.91, BC: 274.14, BCN: 274.14, CIGNA: 206.02, HAP: 206.02, UHC: 301.23, PTPAY: 270, OTHER: 274.14 }},
+  '11420': { desc: 'Exc benign scalp/neck/hf ≤0.5cm', prices: { AETNA: 153.67, BC: 159.6, BCN: 159.6, CIGNA: 119.2, HAP: 119.2, UHC: 139.93, PTPAY: 155, OTHER: 159.6 }},
+  '11421': { desc: 'Exc benign scalp/neck/hf 0.6-1cm', prices: { AETNA: 193.96, BC: 200.76, BCN: 200.76, CIGNA: 155.43, HAP: 155.43, UHC: 180.05, PTPAY: 185, OTHER: 200.76 }},
+  '11422': { desc: 'Exc benign scalp/neck/hf 1.1-2cm', prices: { AETNA: 217.59, BC: 226.38, BCN: 226.38, CIGNA: 173.46, HAP: 173.46, UHC: 202.5, PTPAY: 205, OTHER: 226.38 }},
+  '11423': { desc: 'Exc benign scalp/neck/hf 2.1-3cm', prices: { AETNA: 248.57, BC: 260.82, BCN: 260.82, CIGNA: 201.08, HAP: 201.08, UHC: 233.51, PTPAY: 287, OTHER: 260.82 }},
   '11424': { desc: 'Exc benign scalp/neck/hf 3.1-4cm', prices: { AETNA: 311.93, BC: 324.78, BCN: 324.78, CIGNA: 246.49, HAP: 246.49, UHC: 365.05, PTPAY: 315, OTHER: 324.78 }},
   '11426': { desc: 'Exc benign scalp/neck/hf >4cm', prices: { AETNA: 421.96, BC: 439.26, BCN: 439.26, CIGNA: 341.56, HAP: 341.56, UHC: 501.94, PTPAY: 420, OTHER: 439.26 }},
 
@@ -94,31 +94,31 @@ const PROCEDURE_CODES = {
   '11440': { desc: 'Exc benign face/ear/nose ≤0.5cm', prices: { AETNA: 172.41, BC: 179.34, BCN: 179.34, CIGNA: 131.99, HAP: 131.99, UHC: 153.58, PTPAY: 157, OTHER: 179.34 }},
   '11441': { desc: 'Exc benign face/ear/nose 0.6-1cm', prices: { AETNA: 210.59, BC: 218.4, BCN: 218.4, CIGNA: 166.41, HAP: 166.41, UHC: 193.13, PTPAY: 198, OTHER: 218.4 }},
   '11442': { desc: 'Exc benign face/ear/nose 1.1-2cm', prices: { AETNA: 234.34, BC: 244.02, BCN: 244.02, CIGNA: 187.63, HAP: 187.63, UHC: 216.76, PTPAY: 268, OTHER: 244.02 }},
-  '11443': { desc: 'Exc benign face/ear/nose 2.1-3cm', prices: { AETNA: 277.52, BC: 288.96, BCN: 288.96, CIGNA: 224.26, HAP: 224.26, UHC: 257.59, PTPAY: 319, OTHER: 288.96 }},
+  '11443': { desc: 'Exc benign face/ear/nose 2.1-3cm', prices: { AETNA: 277.52, BC: 288.96, BCN: 288.96, CIGNA: 224.26, HAP: 224.26, UHC: 259.72, PTPAY: 319, OTHER: 288.96 }},
   '11444': { desc: 'Exc benign face/ear/nose 3.1-4cm', prices: { AETNA: 362.24, BC: 377.10, BCN: 377.10, CIGNA: 290.55, HAP: 290.55, UHC: 406.06, PTPAY: 380, OTHER: 377.10 }},
   '11446': { desc: 'Exc benign face/ear/nose >4cm', prices: { AETNA: 479.00, BC: 498.42, BCN: 498.42, CIGNA: 393.00, HAP: 393.00, UHC: 524.38, PTPAY: 485, OTHER: 498.42 }},
 
   // Malignant Excision - Trunk/Arms/Legs
-  '11600': { desc: 'Exc malig trunk/arm/leg ≤0.5cm', prices: { AETNA: 276.46, BC: 314.77, BCN: 314.77, CIGNA: 226.1, HAP: 226.1, UHC: 221.03, PTPAY: 298, OTHER: 314.77 }},
-  '11601': { desc: 'Exc malig trunk/arm/leg 0.6-1cm', prices: { AETNA: 295.9, BC: 287.7, BCN: 287.7, CIGNA: 246.49, HAP: 246.49, UHC: 263.92, PTPAY: 293, OTHER: 287.7 }},
-  '11602': { desc: 'Exc malig trunk/arm/leg 1.1-2cm', prices: { AETNA: 338.76, BC: 308.7, BCN: 308.7, CIGNA: 246.49, HAP: 246.49, UHC: 286.34, PTPAY: 293, OTHER: 308.7 }},
-  '11603': { desc: 'Exc malig trunk/arm/leg 2.1-3cm', prices: { AETNA: 240, BC: 446.32, BCN: 446.32, CIGNA: 191.13, HAP: 191.13, UHC: 328.49, PTPAY: 440, OTHER: 446.32 }},
+  '11600': { desc: 'Exc malig trunk/arm/leg ≤0.5cm', prices: { AETNA: 238.8, BC: 314.77, BCN: 314.77, CIGNA: 188.19, HAP: 188.19, UHC: 221.03, PTPAY: 298, OTHER: 314.77 }},
+  '11601': { desc: 'Exc malig trunk/arm/leg 0.6-1cm', prices: { AETNA: 276.46, BC: 287.7, BCN: 287.7, CIGNA: 226.1, HAP: 226.1, UHC: 263.92, PTPAY: 268, OTHER: 287.7 }},
+  '11602': { desc: 'Exc malig trunk/arm/leg 1.1-2cm', prices: { AETNA: 295.9, BC: 308.7, BCN: 308.7, CIGNA: 246.49, HAP: 246.49, UHC: 286.34, PTPAY: 293, OTHER: 308.7 }},
+  '11603': { desc: 'Exc malig trunk/arm/leg 2.1-3cm', prices: { AETNA: 338.76, BC: 446.32, BCN: 446.32, CIGNA: 246.49, HAP: 246.49, UHC: 328.49, PTPAY: 440, OTHER: 446.32 }},
   '11604': { desc: 'Exc malig trunk/arm/leg 3.1-4cm', prices: { AETNA: 422.92, BC: 440.28, BCN: 440.28, CIGNA: 323.84, HAP: 323.84, UHC: 490.45, PTPAY: 405, OTHER: 440.28 }},
   '11606': { desc: 'Exc malig trunk/arm/leg >4cm', prices: { AETNA: 528.40, BC: 550.02, BCN: 550.02, CIGNA: 412.58, HAP: 412.58, UHC: 623.95, PTPAY: 495, OTHER: 550.02 }},
 
   // Malignant Excision - Scalp/Neck/Hands/Feet/Genitalia
   '11620': { desc: 'Exc malig scalp/neck/hf ≤0.5cm', prices: { AETNA: 240, BC: 315.83, BCN: 315.83, CIGNA: 191.13, HAP: 191.13, UHC: 223.42, PTPAY: 300, OTHER: 315.83 }},
-  '11621': { desc: 'Exc malig scalp/neck/hf 0.6-1cm', prices: { AETNA: 278.13, BC: 366.96, BCN: 366.96, CIGNA: 227.73, HAP: 227.73, UHC: 314.04, PTPAY: 351, OTHER: 366.96 }},
-  '11622': { desc: 'Exc malig scalp/neck/hf 1.1-2cm', prices: { AETNA: 305.91, BC: 404.24, BCN: 404.24, CIGNA: 255.43, HAP: 255.43, UHC: 345.94, PTPAY: 400, OTHER: 404.24 }},
-  '11623': { desc: 'Exc malig scalp/neck/hf 2.1-3cm', prices: { AETNA: 360.05, BC: 473.48, BCN: 473.48, CIGNA: 300.34, HAP: 300.34, UHC: 405.19, PTPAY: 459, OTHER: 473.48 }},
+  '11621': { desc: 'Exc malig scalp/neck/hf 0.6-1cm', prices: { AETNA: 278.13, BC: 366.96, BCN: 366.96, CIGNA: 227.73, HAP: 227.73, UHC: 265.71, PTPAY: 351, OTHER: 366.96 }},
+  '11622': { desc: 'Exc malig scalp/neck/hf 1.1-2cm', prices: { AETNA: 305.91, BC: 404.24, BCN: 404.24, CIGNA: 255.43, HAP: 255.43, UHC: 296.49, PTPAY: 400, OTHER: 404.24 }},
+  '11623': { desc: 'Exc malig scalp/neck/hf 2.1-3cm', prices: { AETNA: 360.05, BC: 473.48, BCN: 473.48, CIGNA: 300.34, HAP: 300.34, UHC: 348.98, PTPAY: 459, OTHER: 473.48 }},
   '11624': { desc: 'Exc malig scalp/neck/hf 3.1-4cm', prices: { AETNA: 470.31, BC: 489.66, BCN: 489.66, CIGNA: 371.39, HAP: 371.39, UHC: 561.04, PTPAY: 450, OTHER: 489.66 }},
   '11626': { desc: 'Exc malig scalp/neck/hf >4cm', prices: { AETNA: 598.13, BC: 622.74, BCN: 622.74, CIGNA: 479.63, HAP: 479.63, UHC: 721.30, PTPAY: 561, OTHER: 622.74 }},
 
   // Malignant Excision - Face/Ears/Eyelids/Nose/Lips
   '11640': { desc: 'Exc malig face/ear/nose ≤0.5cm', prices: { AETNA: 245.03, BC: 255.78, BCN: 255.78, CIGNA: 197.67, HAP: 197.67, UHC: 230.55, PTPAY: 236, OTHER: 255.78 }},
   '11641': { desc: 'Exc malig face/ear/nose 0.6-1cm', prices: { AETNA: 287.1, BC: 298.62, BCN: 298.62, CIGNA: 237.08, HAP: 237.08, UHC: 274.64, PTPAY: 282, OTHER: 298.62 }},
-  '11642': { desc: 'Exc malig face/ear/nose 1.1-2cm', prices: { AETNA: 324.49, BC: 338.1, BCN: 338.1, CIGNA: 270.98, HAP: 270.98, UHC: 314.37, PTPAY: 319, OTHER: 338.1 }},
-  '11643': { desc: 'Exc malig face/ear/nose 2.1-3cm', prices: { AETNA: 383.29, BC: 398.58, BCN: 398.58, CIGNA: 321.56, HAP: 321.56, UHC: 432.91, PTPAY: 457, OTHER: 398.58 }},
+  '11642': { desc: 'Exc malig face/ear/nose 1.1-2cm', prices: { AETNA: 324.49, BC: 338.1, BCN: 338.1, CIGNA: 270.98, HAP: 270.98, UHC: 314.37, PTPAY: 387, OTHER: 338.1 }},
+  '11643': { desc: 'Exc malig face/ear/nose 2.1-3cm', prices: { AETNA: 383.29, BC: 398.58, BCN: 398.58, CIGNA: 321.56, HAP: 321.56, UHC: 371.85, PTPAY: 457, OTHER: 398.58 }},
   '11644': { desc: 'Exc malig face/ear/nose 3.1-4cm', prices: { AETNA: 509.28, BC: 530.28, BCN: 530.28, CIGNA: 409.19, HAP: 409.19, UHC: 619.54, PTPAY: 524, OTHER: 530.28 }},
   '11646': { desc: 'Exc malig face/ear/nose >4cm', prices: { AETNA: 648.68, BC: 675.48, BCN: 675.48, CIGNA: 528.44, HAP: 528.44, UHC: 797.22, PTPAY: 651, OTHER: 675.48 }},
 
@@ -140,18 +140,18 @@ const PROCEDURE_CODES = {
   '17266': { desc: 'DEF Malig trunk/arm/leg >4cm', prices: { AETNA: 360.08, BC: 376.20, BCN: 376.20, CIGNA: 290.35, HAP: 290.35, UHC: 432.99, PTPAY: 315, OTHER: 376.20 }},
 
   // Destruction - Malignant (ED&C) Scalp/Neck/Hands/Feet/Genitalia
-  '17270': { desc: 'DEF Malig scalp/neck/hf ≤0.5cm', prices: { AETNA: 181.44, BC: 189.84, BCN: 189.84, CIGNA: 149.69, HAP: 149.69, UHC: 173.15, PTPAY: 215, OTHER: 189.84 }},
-  '17271': { desc: 'DEF Malig scalp/neck/hf 0.6-1cm', prices: { AETNA: 201.54, BC: 210.42, BCN: 210.42, CIGNA: 163.53, HAP: 163.53, UHC: 189.61, PTPAY: 245, OTHER: 210.42 }},
+  '17270': { desc: 'DEF Malig scalp/neck/hf ≤0.5cm', prices: { AETNA: 181.44, BC: 189.84, BCN: 189.84, CIGNA: 149.69, HAP: 149.69, UHC: 173.3, PTPAY: 215, OTHER: 189.84 }},
+  '17271': { desc: 'DEF Malig scalp/neck/hf 0.6-1cm', prices: { AETNA: 201.54, BC: 210.42, BCN: 210.42, CIGNA: 163.53, HAP: 163.53, UHC: 188, PTPAY: 245, OTHER: 210.42 }},
   '17272': { desc: 'DEF Malig scalp/neck/hf 1.1-2cm', prices: { AETNA: 228.42, BC: 237.72, BCN: 237.72, CIGNA: 186.21, HAP: 186.21, UHC: 214.6, PTPAY: 267, OTHER: 237.72 }},
   '17273': { desc: 'DEF Malig scalp/neck/hf 2.1-3cm', prices: { AETNA: 253.42, BC: 264.18, BCN: 264.18, CIGNA: 207.84, HAP: 207.84, UHC: 240.02, PTPAY: 297, OTHER: 264.18 }},
   '17274': { desc: 'DEF Malig scalp/neck/hf 3.1-4cm', prices: { AETNA: 168.85, BC: 178.08, BCN: 178.08, CIGNA: 140.35, HAP: 140.35, UHC: 162.17, PTPAY: 225, OTHER: 178.08 }},
   '17276': { desc: 'DEF Malig scalp/neck/hf >4cm', prices: { AETNA: 385.75, BC: 403.14, BCN: 403.14, CIGNA: 311.60, HAP: 311.60, UHC: 466.73, PTPAY: 340, OTHER: 403.14 }},
 
   // Destruction - Malignant (ED&C) Face/Ears/Eyelids/Nose/Lips
-  '17280': { desc: 'DEF Malig face/ear/nose ≤0.5cm', prices: { AETNA: 218.12, BC: 227.22, BCN: 227.22, CIGNA: 178.04, HAP: 178.04, UHC: 205.49, PTPAY: 245, OTHER: 227.22 }},
-  '17281': { desc: 'DEF Malig face/ear/nose 0.6-1cm', prices: { AETNA: 177.93, BC: 185.88, BCN: 185.88, CIGNA: 140.55, HAP: 140.55, UHC: 209.54, PTPAY: 200, OTHER: 185.88 }},
-  '17282': { desc: 'DEF Malig face/ear/nose 1.1-2cm', prices: { AETNA: 217.31, BC: 227.10, BCN: 227.10, CIGNA: 171.78, HAP: 171.78, UHC: 258.50, PTPAY: 225, OTHER: 227.10 }},
-  '17283': { desc: 'DEF Malig face/ear/nose 2.1-3cm', prices: { AETNA: 262.91, BC: 274.68, BCN: 274.68, CIGNA: 208.58, HAP: 208.58, UHC: 315.82, PTPAY: 255, OTHER: 274.68 }},
+  '17280': { desc: 'DEF Malig face/ear/nose ≤0.5cm', prices: { AETNA: 168.85, BC: 178.08, BCN: 178.08, CIGNA: 140.35, HAP: 140.35, UHC: 162.17, PTPAY: 225, OTHER: 178.08 }},
+  '17281': { desc: 'DEF Malig face/ear/nose 0.6-1cm', prices: { AETNA: 218.12, BC: 227.22, BCN: 227.22, CIGNA: 178.04, HAP: 178.04, UHC: 205.49, PTPAY: 245, OTHER: 227.22 }},
+  '17282': { desc: 'DEF Malig face/ear/nose 1.1-2cm', prices: { AETNA: 249.49, BC: 259.56, BCN: 259.56, CIGNA: 204.57, HAP: 204.57, UHC: 236.06, PTPAY: 295, OTHER: 259.56 }},
+  '17283': { desc: 'DEF Malig face/ear/nose 2.1-3cm', prices: { AETNA: 295.3, BC: 307.44, BCN: 307.44, CIGNA: 245.85, HAP: 245.85, UHC: 283.55, PTPAY: 352, OTHER: 307.44 }},
   '17284': { desc: 'DEF Malig face/ear/nose 3.1-4cm', prices: { AETNA: 326.25, BC: 340.86, BCN: 340.86, CIGNA: 260.78, HAP: 260.78, UHC: 396.08, PTPAY: 300, OTHER: 340.86 }},
   '17286': { desc: 'DEF Malig face/ear/nose >4cm', prices: { AETNA: 423.89, BC: 442.86, BCN: 442.86, CIGNA: 345.48, HAP: 345.48, UHC: 521.42, PTPAY: 370, OTHER: 442.86 }},
 
@@ -266,11 +266,12 @@ const PROCEDURE_CODES = {
   '88304': { desc: 'Path Level III', prices: { AETNA: 50.78, BC: 68.17, BCN: 68.17, CIGNA: 60.07, HAP: 60.07, UHC: 41.73, PTPAY: 110, OTHER: 68.17 }, isPath: true },
   '88305': { desc: 'Path Level IV', prices: { AETNA: 86.11, BC: 105.03, BCN: 105.03, CIGNA: 103.85, HAP: 103.85, UHC: 69.84, PTPAY: 110, OTHER: 105.03 }, isPath: true },
   '88312': { desc: 'Special stain Group I', prices: { AETNA: 133.55, BC: 178.42, BCN: 178.42, CIGNA: 90.50, HAP: 90.50, UHC: 99.50, PTPAY: 150, OTHER: 178.42 }, isPath: true },
-  '88313': { desc: 'Special stain Group II', prices: { AETNA: 102.67, BC: 119.04, BCN: 119.04, CIGNA: 72.50, HAP: 72.50, UHC: 79.10, PTPAY: 130, OTHER: 119.04 }, isPath: true },
-  '88342': { desc: 'Immunohistochemistry', prices: { AETNA: 119.66, BC: 169.37, BCN: 169.37, CIGNA: 102.45, HAP: 102.45, UHC: 108.28, PTPAY: 150, OTHER: 169.37 }, isPath: true },
+  '88313': { desc: 'Special stain Group II', prices: { AETNA: 96.73, BC: 131.02, BCN: 131.02, CIGNA: 63.67, HAP: 63.67, UHC: 70.58, PTPAY: 0, OTHER: 131.02 }, isPath: true },
+  '88342': { desc: 'Immunohistochemistry', prices: { AETNA: 119.66, BC: 179.49, BCN: 179.49, CIGNA: 102.45, HAP: 102.45, UHC: 108.28, PTPAY: 0, OTHER: 179.49 }, isPath: true },
+  '88341': { desc: 'Immunohistochem (addl)', prices: { AETNA: 102.98, BC: 153.92, BCN: 153.92, CIGNA: 62.18, HAP: 62.18, UHC: 91.84, PTPAY: 0, OTHER: 153.92 }, isPath: true },
 
   // Unit-Based (Injections)
-  'J0585': { desc: 'Botox per unit (medical)', prices: { AETNA: 6.60, BC: 6.35, BCN: 6.35, CIGNA: 6.32, HAP: 6.32, UHC: 6.23, PTPAY: 7, OTHER: 6.35 }, isUnitBased: true },
+  'J0585': { desc: 'Botox per unit (medical)', prices: { AETNA: 6.60, BC: 6.38, BCN: 6.38, CIGNA: 6.32, HAP: 6.32, UHC: 6.23, PTPAY: 7, OTHER: 6.38 }, isUnitBased: true },
   'J0586': { desc: 'Dysport per unit', prices: { AETNA: 1.50, BC: 1.45, BCN: 1.45, CIGNA: 1.44, HAP: 1.44, UHC: 1.42, PTPAY: 2, OTHER: 1.45 }, isUnitBased: true },
   'J1020': { desc: 'Injection IM 1cc - 20mg', prices: { AETNA: 7.3, BC: 2.97, BCN: 2.97, CIGNA: 7.04, HAP: 7.04, UHC: 1.49, PTPAY: 34, OTHER: 2.97 }, isUnitBased: true },
   'J1100': { desc: 'Dexamethasone per 4mg', prices: { AETNA: 1.20, BC: 1.15, BCN: 1.15, CIGNA: 1.10, HAP: 1.10, UHC: 1.08, PTPAY: 2, OTHER: 1.15 }, isUnitBased: true },
@@ -283,6 +284,44 @@ const PROCEDURE_CODES = {
 
   // Chemical Peels / Dermabrasion
   '15788': { desc: 'Epidermal Peel', prices: { AETNA: 464.8, BC: 486.36, BCN: 486.36, CIGNA: 450.66, HAP: 450.66, UHC: 0, PTPAY: 0, OTHER: 486.36 }},
+
+  // LN2 for acne
+  '17340': { desc: 'LN2 for acne', prices: { AETNA: 64.7, BC: 84.68, BCN: 0, CIGNA: 0, HAP: 0, UHC: 0, PTPAY: 0, OTHER: 84.68 }},
+
+  // Finger/Hand
+  '26010': { desc: 'Drainage of finger abscess', prices: { AETNA: 529, BC: 534.73, BCN: 534.73, CIGNA: 256.85, HAP: 256.85, UHC: 302.03, PTPAY: 0, OTHER: 534.73 }},
+
+  // Intranasal
+  '30100': { desc: 'Intranasal Biopsy', prices: { AETNA: 191.82, BC: 221.56, BCN: 221.56, CIGNA: 142.18, HAP: 142.18, UHC: 160.26, PTPAY: 0, OTHER: 221.56 }},
+
+  // Specialty Biopsies - Oral
+  '40490': { desc: 'R/O Biopsy Lip', prices: { AETNA: 161.01, BC: 153.72, BCN: 153.72, CIGNA: 129.55, HAP: 129.55, UHC: 187.48, PTPAY: 185, OTHER: 153.72 }},
+  '40808': { desc: 'R/O Biopsy inside mouth', prices: { AETNA: 220.15, BC: 268.96, BCN: 268.96, CIGNA: 184.66, HAP: 184.66, UHC: 271.27, PTPAY: 290, OTHER: 268.96 }},
+  '41100': { desc: 'R/O Biopsy Tongue', prices: { AETNA: 245.81, BC: 297.72, BCN: 297.72, CIGNA: 170.97, HAP: 170.97, UHC: 246, PTPAY: 275, OTHER: 297.72 }},
+
+  // Specialty Biopsies - Penile
+  '54055': { desc: 'ED Penile Lesions', prices: { AETNA: 180.05, BC: 224.22, BCN: 224.22, CIGNA: 118.06, HAP: 118.06, UHC: 137.66, PTPAY: 195, OTHER: 224.22 }},
+  '54056': { desc: 'Cryo Penile Lesions', prices: { AETNA: 188, BC: 185.64, BCN: 185.64, CIGNA: 141, HAP: 141, UHC: 164.17, PTPAY: 168, OTHER: 185.64 }},
+  '54060': { desc: 'Surg Rem Penile', prices: { AETNA: 255.16, BC: 314.77, BCN: 314.77, CIGNA: 182.26, HAP: 182.26, UHC: 208.1, PTPAY: 285, OTHER: 314.77 }},
+  '54100': { desc: 'R/O Biopsy Penis', prices: { AETNA: 264.71, BC: 323.29, BCN: 323.29, CIGNA: 198.47, HAP: 198.47, UHC: 229.44, PTPAY: 307, OTHER: 323.29 }},
+
+  // Specialty Biopsies - Gynecologic
+  '56605': { desc: 'R/O Biopsy Vulva', prices: { AETNA: 123.58, BC: 120.54, BCN: 120.54, CIGNA: 85.04, HAP: 85.04, UHC: 95.72, PTPAY: 295, OTHER: 120.54 }},
+  '57100': { desc: 'R/O Biopsy Vaginal mucosa', prices: { AETNA: 132.15, BC: 165.11, BCN: 165.11, CIGNA: 90.78, HAP: 90.78, UHC: 105.07, PTPAY: 245, OTHER: 165.11 }},
+
+  // Botox - Axilla (hyperhidrosis)
+  '64650': { desc: 'Botox injection Axilla', prices: { AETNA: 120.34, BC: 140.07, BCN: 140.07, CIGNA: 107.83, HAP: 107.83, UHC: 90.24, PTPAY: 165, OTHER: 140.07 }},
+
+  // Specialty Biopsies - Other
+  '67810': { desc: 'R/O Biopsy Eyelid', prices: { AETNA: 258, BC: 288.14, BCN: 288.14, CIGNA: 213.36, HAP: 213.36, UHC: 195.93, PTPAY: 309, OTHER: 288.14 }},
+  '69100': { desc: 'R/O Biopsy Ear', prices: { AETNA: 126.3, BC: 150.73, BCN: 150.73, CIGNA: 101.6, HAP: 101.6, UHC: 115.55, PTPAY: 165, OTHER: 150.73 }},
+
+  // PDT Codes
+  '96567': { desc: 'PDT (no direct physician)', prices: { AETNA: 163.83, BC: 210.38, BCN: 210.38, CIGNA: 131.51, HAP: 131.51, UHC: 140.46, PTPAY: 205, OTHER: 210.38 }},
+  '96573': { desc: 'PDT', prices: { AETNA: 270.36, BC: 350.45, BCN: 350.45, CIGNA: 180.76, HAP: 180.76, UHC: 197.64, PTPAY: 0, OTHER: 350.45 }},
+
+  // Telederm
+  '98005': { desc: 'Telederm x 20 min', prices: { AETNA: 0, BC: 72.95, BCN: 72.95, CIGNA: 0, HAP: 0, UHC: 0, PTPAY: 0, OTHER: 72.95 }},
 
   // E&M Consults
   '99241': { desc: 'Office consult - brief', prices: { AETNA: 64.74, BC: 67.74, BCN: 67.74, CIGNA: 55.46, HAP: 55.46, UHC: 62.77, PTPAY: 85, OTHER: 67.74 }},
