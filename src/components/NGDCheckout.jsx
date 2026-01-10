@@ -173,29 +173,29 @@ const PROCEDURE_CODES = {
   '12018': { desc: 'Repair face/ears/lids >30cm', prices: { AETNA: 532.04, BC: 556.68, BCN: 556.68, CIGNA: 527.52, HAP: 527.52, UHC: 577.86, PTPAY: 560, OTHER: 556.68 }},
 
   // Intermediate Repairs - Trunk/Extremities
-  '12031': { desc: 'Intermed repair trunk/ext ≤2.5cm', prices: { AETNA: 317.44, BC: 328.44, BCN: 328.44, CIGNA: 234.21, HAP: 234.21, UHC: 273.38, PTPAY: 98, OTHER: 328.44 }},
-  '12032': { desc: 'Intermed repair trunk/ext 2.6-7.5cm', prices: { AETNA: 366.75, BC: 381.78, BCN: 381.78, CIGNA: 302.48, HAP: 302.48, UHC: 348.9, PTPAY: 98, OTHER: 381.78 }},
-  '12034': { desc: 'Intermed repair trunk/ext 7.6-12.5cm', prices: { AETNA: 405.03, BC: 419.58, BCN: 419.58, CIGNA: 309.76, HAP: 309.76, UHC: 360.98, PTPAY: 295, OTHER: 419.58 }},
-  '12035': { desc: 'Intermed repair trunk/ext 12.6-20cm', prices: { AETNA: 340.62, BC: 356.40, BCN: 356.40, CIGNA: 331.94, HAP: 331.94, UHC: 363.61, PTPAY: 360, OTHER: 356.40 }},
-  '12036': { desc: 'Intermed repair trunk/ext 20.1-30cm', prices: { AETNA: 415.31, BC: 434.46, BCN: 434.46, CIGNA: 413.05, HAP: 413.05, UHC: 449.85, PTPAY: 435, OTHER: 434.46 }},
-  '12037': { desc: 'Intermed repair trunk/ext >30cm', prices: { AETNA: 521.27, BC: 545.40, BCN: 545.40, CIGNA: 527.52, HAP: 527.52, UHC: 571.93, PTPAY: 550, OTHER: 545.40 }},
+  '12031': { desc: 'Intermed repair trunk/ext ≤2.5cm', prices: { AETNA: 317.44, 'AH&L': 234.21, BC: 328.44, BCN: 328.44, CIGNA: 234.21, HAP: 234.21, MR: 258.58, PRIOR: 356.42, UHC: 273.38, PTPAY: 0, OTHER: 328.44 }},
+  '12032': { desc: 'Intermed repair trunk/ext 2.6-7.5cm', prices: { AETNA: 366.75, 'AH&L': 302.48, BC: 381.78, BCN: 381.78, CIGNA: 302.48, HAP: 302.48, MR: 298.26, PRIOR: 414.31, UHC: 348.9, PTPAY: 0, OTHER: 381.78 }},
+  '12034': { desc: 'Intermed repair trunk/ext 7.6-12.5cm', prices: { AETNA: 405.03, 'AH&L': 309.76, BC: 419.58, BCN: 419.58, CIGNA: 309.76, HAP: 309.76, MR: 335.75, PRIOR: 455.32, UHC: 360.98, PTPAY: 0, OTHER: 419.58 }},
+  '12035': { desc: 'Intermed repair trunk/ext 12.6-20cm', prices: { AETNA: 340.62, 'AH&L': 331.94, BC: 356.40, BCN: 356.40, CIGNA: 331.94, HAP: 331.94, MR: 290.00, PRIOR: 385.00, UHC: 363.61, PTPAY: 360, OTHER: 356.40 }},
+  '12036': { desc: 'Intermed repair trunk/ext 20.1-30cm', prices: { AETNA: 415.31, 'AH&L': 413.05, BC: 434.46, BCN: 434.46, CIGNA: 413.05, HAP: 413.05, MR: 355.00, PRIOR: 470.00, UHC: 449.85, PTPAY: 435, OTHER: 434.46 }},
+  '12037': { desc: 'Intermed repair trunk/ext >30cm', prices: { AETNA: 521.27, 'AH&L': 527.52, BC: 545.40, BCN: 545.40, CIGNA: 527.52, HAP: 527.52, MR: 445.00, PRIOR: 590.00, UHC: 571.93, PTPAY: 550, OTHER: 545.40 }},
 
   // Intermediate Repairs - Scalp/Axillae/Trunk/Ext
-  '12041': { desc: 'Intermed repair neck/hf/gen ≤2.5cm', prices: { AETNA: 319.05, BC: 418.62, BCN: 418.62, CIGNA: 238.79, HAP: 238.79, UHC: 273.02, PTPAY: 225, OTHER: 418.62 }},
-  '12042': { desc: 'Intermed repair neck/hf/gen 2.6-7.5cm', prices: { AETNA: 374.92, BC: 493.19, BCN: 493.19, CIGNA: 288.18, HAP: 288.18, UHC: 334, PTPAY: 270, OTHER: 493.19 }},
-  '12044': { desc: 'Intermed repair neck/hf/gen 7.6-12.5cm', prices: { AETNA: 461.38, BC: 609.83, BCN: 609.83, CIGNA: 352.15, HAP: 352.15, UHC: 413.61, PTPAY: 325, OTHER: 609.83 }},
-  '12045': { desc: 'Intermed repair neck/hf/gen 12.6-20cm', prices: { AETNA: 381.47, BC: 399.12, BCN: 399.12, CIGNA: 377.22, HAP: 377.22, UHC: 412.68, PTPAY: 400, OTHER: 399.12 }},
-  '12046': { desc: 'Intermed repair neck/hf/gen 20.1-30cm', prices: { AETNA: 471.85, BC: 493.68, BCN: 493.68, CIGNA: 475.88, HAP: 475.88, UHC: 517.33, PTPAY: 495, OTHER: 493.68 }},
-  '12047': { desc: 'Intermed repair neck/hf/gen >30cm', prices: { AETNA: 601.84, BC: 629.58, BCN: 629.58, CIGNA: 616.61, HAP: 616.61, UHC: 666.84, PTPAY: 630, OTHER: 629.58 }},
+  '12041': { desc: 'Intermed repair neck/hf/gen ≤2.5cm', prices: { AETNA: 319.05, 'AH&L': 238.79, BC: 418.62, BCN: 418.62, CIGNA: 238.79, HAP: 238.79, MR: 262.08, PRIOR: 358.24, UHC: 273.02, PTPAY: 0, OTHER: 418.62 }},
+  '12042': { desc: 'Intermed repair neck/hf/gen 2.6-7.5cm', prices: { AETNA: 374.92, 'AH&L': 288.18, BC: 493.19, BCN: 493.19, CIGNA: 288.18, HAP: 288.18, MR: 304.68, PRIOR: 422.06, UHC: 334, PTPAY: 0, OTHER: 493.19 }},
+  '12044': { desc: 'Intermed repair neck/hf/gen 7.6-12.5cm', prices: { AETNA: 461.38, 'AH&L': 352.15, BC: 609.83, BCN: 609.83, CIGNA: 352.15, HAP: 352.15, MR: 388.77, PRIOR: 521.87, UHC: 413.61, PTPAY: 0, OTHER: 609.83 }},
+  '12045': { desc: 'Intermed repair neck/hf/gen 12.6-20cm', prices: { AETNA: 381.47, 'AH&L': 377.22, BC: 399.12, BCN: 399.12, CIGNA: 377.22, HAP: 377.22, MR: 325.00, PRIOR: 430.00, UHC: 412.68, PTPAY: 400, OTHER: 399.12 }},
+  '12046': { desc: 'Intermed repair neck/hf/gen 20.1-30cm', prices: { AETNA: 471.85, 'AH&L': 475.88, BC: 493.68, BCN: 493.68, CIGNA: 475.88, HAP: 475.88, MR: 405.00, PRIOR: 535.00, UHC: 517.33, PTPAY: 495, OTHER: 493.68 }},
+  '12047': { desc: 'Intermed repair neck/hf/gen >30cm', prices: { AETNA: 601.84, 'AH&L': 616.61, BC: 629.58, BCN: 629.58, CIGNA: 616.61, HAP: 616.61, MR: 515.00, PRIOR: 680.00, UHC: 666.84, PTPAY: 630, OTHER: 629.58 }},
 
   // Intermediate Repairs - Face/Ears/Eyelids/Nose/Lips/Mucous
-  '12051': { desc: 'Intermed repair face/ear/nose ≤2.5cm', prices: { AETNA: 343.15, BC: 448.98, BCN: 448.98, CIGNA: 258.45, HAP: 258.45, UHC: 297.24, PTPAY: 250, OTHER: 448.98 }},
-  '12052': { desc: 'Intermed repair face/ear/nose 2.6-5cm', prices: { AETNA: 382.9, BC: 501.71, BCN: 501.71, CIGNA: 295.95, HAP: 295.95, UHC: 339.76, PTPAY: 285, OTHER: 501.71 }},
-  '12053': { desc: 'Intermed repair face/ear/nose 5.1-7.5cm', prices: { AETNA: 441.25, BC: 576.81, BCN: 576.81, CIGNA: 342.48, HAP: 342.48, UHC: 398.19, PTPAY: 325, OTHER: 576.81 }},
-  '12054': { desc: 'Intermed repair face/ear/nose 7.6-12.5cm', prices: { AETNA: 467.93, BC: 607.16, BCN: 607.16, CIGNA: 365.7, HAP: 365.7, UHC: 398.19, PTPAY: 400, OTHER: 607.16 }},
-  '12055': { desc: 'Intermed repair face/ear/nose 12.6-20cm', prices: { AETNA: 467.54, BC: 489.18, BCN: 489.18, CIGNA: 476.52, HAP: 476.52, UHC: 516.37, PTPAY: 490, OTHER: 489.18 }},
-  '12056': { desc: 'Intermed repair face/ear/nose 20.1-30cm', prices: { AETNA: 583.42, BC: 610.44, BCN: 610.44, CIGNA: 604.34, HAP: 604.34, UHC: 651.91, PTPAY: 615, OTHER: 610.44 }},
-  '12057': { desc: 'Intermed repair face/ear/nose >30cm', prices: { AETNA: 739.66, BC: 773.82, BCN: 773.82, CIGNA: 776.98, HAP: 776.98, UHC: 834.20, PTPAY: 775, OTHER: 773.82 }},
+  '12051': { desc: 'Intermed repair face/ear/nose ≤2.5cm', prices: { AETNA: 343.15, 'AH&L': 258.45, BC: 448.98, BCN: 448.98, CIGNA: 258.45, HAP: 258.45, MR: 282.64, PRIOR: 384.22, UHC: 297.24, PTPAY: 0, OTHER: 448.98 }},
+  '12052': { desc: 'Intermed repair face/ear/nose 2.6-5cm', prices: { AETNA: 382.9, 'AH&L': 295.95, BC: 501.71, BCN: 501.71, CIGNA: 295.95, HAP: 295.95, MR: 312.51, PRIOR: 429.34, UHC: 339.76, PTPAY: 0, OTHER: 501.71 }},
+  '12053': { desc: 'Intermed repair face/ear/nose 5.1-7.5cm', prices: { AETNA: 441.25, 'AH&L': 342.48, BC: 576.81, BCN: 576.81, CIGNA: 342.48, HAP: 342.48, MR: 361.43, PRIOR: 493.61, UHC: 398.19, PTPAY: 0, OTHER: 576.81 }},
+  '12054': { desc: 'Intermed repair face/ear/nose 7.6-12.5cm', prices: { AETNA: 467.93, 'AH&L': 365.7, BC: 607.16, BCN: 607.16, CIGNA: 365.7, HAP: 365.7, MR: 393.7, PRIOR: 519.59, UHC: 415.93, PTPAY: 0, OTHER: 607.16 }},
+  '12055': { desc: 'Intermed repair face/ear/nose 12.6-20cm', prices: { AETNA: 467.54, 'AH&L': 476.52, BC: 489.18, BCN: 489.18, CIGNA: 476.52, HAP: 476.52, MR: 400.00, PRIOR: 528.00, UHC: 516.37, PTPAY: 490, OTHER: 489.18 }},
+  '12056': { desc: 'Intermed repair face/ear/nose 20.1-30cm', prices: { AETNA: 583.42, 'AH&L': 604.34, BC: 610.44, BCN: 610.44, CIGNA: 604.34, HAP: 604.34, MR: 500.00, PRIOR: 660.00, UHC: 651.91, PTPAY: 615, OTHER: 610.44 }},
+  '12057': { desc: 'Intermed repair face/ear/nose >30cm', prices: { AETNA: 739.66, 'AH&L': 776.98, BC: 773.82, BCN: 773.82, CIGNA: 776.98, HAP: 776.98, MR: 635.00, PRIOR: 837.00, UHC: 834.20, PTPAY: 775, OTHER: 773.82 }},
 
   // Complex Repairs - Trunk
   '13100': { desc: 'Complex repair trunk 1.1-2.5cm', prices: { AETNA: 325.33, BC: 340.32, BCN: 340.32, CIGNA: 319.62, HAP: 319.62, UHC: 350.53, PTPAY: 345, OTHER: 340.32 }},
