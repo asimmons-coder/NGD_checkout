@@ -96,7 +96,7 @@ export default function NGDCheckout() {
 
   const [patientInfo, setPatientInfo] = useState({
     accountNumber: '',
-    doctor: 'FN',
+    doctor: 'fred',
     recallsAddressed: false,
     knFnCosmeticChecked: false,
     knFnMedicalChecked: false,
@@ -421,8 +421,11 @@ export default function NGDCheckout() {
   );
 
   const Checkbox = ({ label, checked, onChange, required }) => (
-    <label className="flex items-center gap-3 cursor-pointer group">
-      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all
+    <div
+      onClick={onChange}
+      className="flex items-center gap-3 cursor-pointer group"
+    >
+      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center
         ${checked ? 'bg-ngd-brown border-ngd-brown' : 'border-ngd-taupe group-hover:border-ngd-gray'}
         ${required && !checked ? 'border-amber-400 bg-amber-50' : ''}`}>
         {checked && <span className="text-white text-xs">✓</span>}
@@ -430,7 +433,7 @@ export default function NGDCheckout() {
       <span className={`text-sm ${required && !checked ? 'text-amber-700 font-medium' : 'text-ngd-gray'}`}>
         {label} {required && !checked && <span className="text-amber-500">*</span>}
       </span>
-    </label>
+    </div>
   );
 
   const Input = ({ label, value, onChange, type = 'text', prefix, placeholder, small }) => (
@@ -709,16 +712,21 @@ export default function NGDCheckout() {
           <div>
             <label className="block text-xs font-medium text-ngd-gray mb-1">Provider</label>
             <div className="flex gap-2">
-              {['FN', 'KN'].map(doc => (
+              {[
+                { id: 'fred', name: 'Dr. Fred' },
+                { id: 'karlee', name: 'Dr. Karlee' },
+                { id: 'taylor', name: 'Dr. Taylor' }
+              ].map(doc => (
                 <button
-                  key={doc}
-                  onClick={() => setPatientInfo(p => ({ ...p, doctor: doc }))}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all
-                    ${patientInfo.doctor === doc
+                  key={doc.id}
+                  type="button"
+                  onClick={() => setPatientInfo(p => ({ ...p, doctor: doc.id }))}
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium
+                    ${patientInfo.doctor === doc.id
                       ? 'bg-ngd-brown text-white shadow-sm'
                       : 'bg-ngd-light text-ngd-gray hover:bg-ngd-taupe/30'}`}
                 >
-                  Dr. {doc === 'FN' ? 'Novice' : 'Karlee'}
+                  {doc.name}
                 </button>
               ))}
             </div>
@@ -734,13 +742,13 @@ export default function NGDCheckout() {
             required
           />
           <Checkbox
-            label="KN/FN Cosmetic box checked"
+            label="Provider cosmetic box checked"
             checked={patientInfo.knFnCosmeticChecked}
             onChange={() => setPatientInfo(p => ({ ...p, knFnCosmeticChecked: !p.knFnCosmeticChecked }))}
             required
           />
           <Checkbox
-            label="KN/FN Medical box checked"
+            label="Provider medical box checked"
             checked={patientInfo.knFnMedicalChecked}
             onChange={() => setPatientInfo(p => ({ ...p, knFnMedicalChecked: !p.knFnMedicalChecked }))}
             required
@@ -1295,7 +1303,7 @@ export default function NGDCheckout() {
           setCheckout({ completed: false, amountPaid: '' });
           setPatientInfo({
             accountNumber: '',
-            doctor: 'FN',
+            doctor: 'fred',
             recallsAddressed: false,
             knFnCosmeticChecked: false,
             knFnMedicalChecked: false,
