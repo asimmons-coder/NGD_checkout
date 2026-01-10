@@ -90,6 +90,60 @@ const formatCurrencyAlways = (amount) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
 };
 
+// UI Components - defined outside main component to prevent re-creation on render
+const Section = ({ title, children, icon }) => (
+  <div className="bg-white rounded-xl shadow-sm border border-ngd-taupe/30 overflow-hidden">
+    <div className="px-5 py-4 bg-gradient-to-r from-ngd-light to-white border-b border-ngd-taupe/20">
+      <h3 className="text-sm font-semibold text-ngd-dark uppercase tracking-wide flex items-center gap-2">
+        <span className="text-lg">{icon}</span> {title}
+      </h3>
+    </div>
+    <div className="p-5">{children}</div>
+  </div>
+);
+
+const Checkbox = ({ label, checked, onChange, required }) => (
+  <div
+    onClick={onChange}
+    className="flex items-center gap-3 cursor-pointer group"
+  >
+    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center
+      ${checked ? 'bg-ngd-brown border-ngd-brown' : 'border-ngd-taupe group-hover:border-ngd-gray'}
+      ${required && !checked ? 'border-amber-400 bg-amber-50' : ''}`}>
+      {checked && <span className="text-white text-xs">✓</span>}
+    </div>
+    <span className={`text-sm ${required && !checked ? 'text-amber-700 font-medium' : 'text-ngd-gray'}`}>
+      {label} {required && !checked && <span className="text-amber-500">*</span>}
+    </span>
+  </div>
+);
+
+const Input = ({ label, value, onChange, type = 'text', prefix, placeholder, small }) => (
+  <div className={small ? 'flex-1' : ''}>
+    {label && <label className="block text-xs font-medium text-ngd-gray mb-1">{label}</label>}
+    <div className="relative">
+      {prefix && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ngd-taupe text-sm">{prefix}</span>}
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className={`w-full rounded-lg border border-ngd-taupe/50 py-2 text-sm focus:border-ngd-brown focus:ring-2 focus:ring-ngd-taupe/20 outline-none
+          ${prefix ? 'pl-7 pr-3' : 'px-3'}`}
+      />
+    </div>
+  </div>
+);
+
+const CalcRow = ({ label, value, indent, bold, highlight, sub, dimmed }) => (
+  <div className={`flex justify-between py-1 ${indent ? 'pl-4' : ''} ${highlight ? 'bg-amber-50 -mx-2 px-2 rounded' : ''}`}>
+    <span className={`text-sm ${bold ? 'font-semibold text-ngd-dark' : sub ? 'text-ngd-taupe text-xs' : dimmed ? 'text-ngd-taupe' : 'text-ngd-gray'}`}>{label}</span>
+    <span className={`text-sm font-mono ${bold ? 'font-bold text-ngd-dark' : dimmed ? 'text-ngd-taupe' : 'font-medium text-ngd-gray'}`}>
+      {typeof value === 'number' ? formatCurrency(value) : value}
+    </span>
+  </div>
+);
+
 export default function NGDCheckout() {
   const [step, setStep] = useState(1);
   const [showCalculations, setShowCalculations] = useState(true);
@@ -408,59 +462,6 @@ export default function NGDCheckout() {
       hsaStopped: false,
     };
   }, [cosmetics, products, procedures, insurance, adjustments, patientInfo, insurerKey]);
-
-  const Section = ({ title, children, icon }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-ngd-taupe/30 overflow-hidden">
-      <div className="px-5 py-4 bg-gradient-to-r from-ngd-light to-white border-b border-ngd-taupe/20">
-        <h3 className="text-sm font-semibold text-ngd-dark uppercase tracking-wide flex items-center gap-2">
-          <span className="text-lg">{icon}</span> {title}
-        </h3>
-      </div>
-      <div className="p-5">{children}</div>
-    </div>
-  );
-
-  const Checkbox = ({ label, checked, onChange, required }) => (
-    <div
-      onClick={onChange}
-      className="flex items-center gap-3 cursor-pointer group"
-    >
-      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center
-        ${checked ? 'bg-ngd-brown border-ngd-brown' : 'border-ngd-taupe group-hover:border-ngd-gray'}
-        ${required && !checked ? 'border-amber-400 bg-amber-50' : ''}`}>
-        {checked && <span className="text-white text-xs">✓</span>}
-      </div>
-      <span className={`text-sm ${required && !checked ? 'text-amber-700 font-medium' : 'text-ngd-gray'}`}>
-        {label} {required && !checked && <span className="text-amber-500">*</span>}
-      </span>
-    </div>
-  );
-
-  const Input = ({ label, value, onChange, type = 'text', prefix, placeholder, small }) => (
-    <div className={small ? 'flex-1' : ''}>
-      {label && <label className="block text-xs font-medium text-ngd-gray mb-1">{label}</label>}
-      <div className="relative">
-        {prefix && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ngd-taupe text-sm">{prefix}</span>}
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className={`w-full rounded-lg border border-ngd-taupe/50 py-2 text-sm focus:border-ngd-brown focus:ring-2 focus:ring-ngd-taupe/20 outline-none transition-all
-            ${prefix ? 'pl-7 pr-3' : 'px-3'}`}
-        />
-      </div>
-    </div>
-  );
-
-  const CalcRow = ({ label, value, indent, bold, highlight, sub, dimmed }) => (
-    <div className={`flex justify-between py-1 ${indent ? 'pl-4' : ''} ${highlight ? 'bg-amber-50 -mx-2 px-2 rounded' : ''}`}>
-      <span className={`text-sm ${bold ? 'font-semibold text-ngd-dark' : sub ? 'text-ngd-taupe text-xs' : dimmed ? 'text-ngd-taupe' : 'text-ngd-gray'}`}>{label}</span>
-      <span className={`text-sm font-mono ${bold ? 'font-bold text-ngd-dark' : dimmed ? 'text-ngd-taupe' : 'font-medium text-ngd-gray'}`}>
-        {typeof value === 'number' ? formatCurrency(value) : value}
-      </span>
-    </div>
-  );
 
   const CalculationBreakdown = () => {
     if (calculations.hsaStopped) {
