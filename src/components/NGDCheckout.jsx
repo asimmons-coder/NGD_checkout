@@ -129,7 +129,7 @@ const PROCEDURE_CODES = {
 
   // Destruction - Benign
   '17110': { desc: 'Destruct benign 1-14 lesions', prices: { AETNA: 64.45, BC: 66.06, BCN: 66.06, CIGNA: 50.70, HAP: 50.70, UHC: 70.97, PTPAY: 134, OTHER: 66.06 }},
-  '17111': { desc: 'Destruct benign 15+ lesions', prices: { AETNA: 105.23, BC: 109.14, BCN: 109.14, CIGNA: 79.42, HAP: 79.42, UHC: 113.96, PTPAY: 156, OTHER: 109.14 }},
+  '17111': { desc: 'Destruct benign 15+ lesions', prices: { AETNA: 160.20, BC: 167.58, BCN: 167.58, CIGNA: 128.41, HAP: 128.41, UHC: 150.39, PTPAY: 156, OTHER: 167.58 }},
 
   // Destruction - Malignant (ED&C) Trunk/Arms/Legs
   '17260': { desc: 'Destruct malig trunk/arm/leg ≤0.5cm', prices: { AETNA: 128.76, BC: 134.70, BCN: 134.70, CIGNA: 100.35, HAP: 100.35, UHC: 150.17, PTPAY: 137, OTHER: 134.70 }},
