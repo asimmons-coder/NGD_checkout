@@ -598,49 +598,55 @@ export default function NGDCheckout() {
     let copayType = null;
     let pathCopayCollected = 0;
 
-    // Special case: Deductible met by PV/Surg + OC with copay
-    // If deductible is fully met by PV/surg codes AND there's an OC with a copay:
+    // Special case: Deductible met by PV/Surg codes
+    // If deductible is fully met by PV/surg codes:
     // - Charge full deductible (from PV/surg)
-    // - Charge OC copay (not blocked)
     // - Apply coinsurance to remaining PV/surg amount
-    // - OC does NOT go toward deductible or get coinsurance
+    // - If OC with copay: collect OC copay (not blocked), OC doesn't go toward deductible
+    // - If Path codes: apply path coinsurance OR path copay (whichever is set)
     const deductibleCanBeMetByPvSurg = deductible > 0 && pvSurgTotal >= deductible;
     const hasOcWithCopay = ocTotal > 0 && ocCopay > 0;
+    const hasPathology = pathTotal > 0;
     const specialOcCopayRule = deductibleCanBeMetByPvSurg && hasOcWithCopay;
     let copaysBlocked = false;
 
-    if (deductibleCanBeMetByPvSurg && hasOcWithCopay) {
-      // Special rule applies
+    if (deductibleCanBeMetByPvSurg) {
+      // Special rule applies - deductible fully covered by PV/Surg
       pvSurgTowardsDed = deductible;
       pvSurgAfterDed = pvSurgTotal - deductible;
       remainingDed = 0;
 
-      // OC does NOT go toward deductible in this case
-      ocTowardsDed = 0;
-      ocAfterDed = 0; // OC doesn't get coinsurance either - copay is collected instead
-
-      // Path still goes through normal waterfall (but deductible already met)
+      // Path does NOT go toward deductible (already met)
       pathTowardsDed = 0;
       pathAfterDed = pathTotal;
 
-      // Apply coinsurance to PV/Surg remainder only
+      // OC does NOT go toward deductible in this case
+      ocTowardsDed = 0;
+      ocAfterDed = 0; // OC doesn't get coinsurance - copay collected instead (if applicable)
+
+      // Apply coinsurance to PV/Surg remainder
       if (coinsurancePct > 0) {
         pvSurgCoinsurance = pvSurgAfterDed * (coinsurancePct / 100);
       }
-      // Path coinsurance still applies
-      if (pathCoinsurancePct > 0) {
-        pathCoinsurance = pathAfterDed * (pathCoinsurancePct / 100);
-      }
-      // No OC coinsurance - we're collecting copay instead
 
-      // Collect OC copay
-      copayCollected = ocCopay;
-      copayType = 'Office Call Copay';
-
-      // Path copay - still blocked if there's coinsurance on path
-      if (pathTotal > 0 && pathCopay > 0 && pathCoinsurancePct === 0) {
-        pathCopayCollected = pathCopay;
+      // Path: apply coinsurance OR copay (one or the other)
+      if (hasPathology) {
+        if (pathCoinsurancePct > 0) {
+          // Path coinsurance applies
+          pathCoinsurance = pathAfterDed * (pathCoinsurancePct / 100);
+          // No path copay when coinsurance exists
+        } else if (pathCopay > 0) {
+          // No coinsurance, collect path copay
+          pathCopayCollected = pathCopay;
+        }
       }
+
+      // OC: collect copay if OC with copay exists
+      if (hasOcWithCopay) {
+        copayCollected = ocCopay;
+        copayType = 'Office Call Copay';
+      }
+      // No OC coinsurance - we're collecting copay instead (or nothing if no copay)
     } else {
       // Standard waterfall logic
       if (remainingDed > 0 && pvSurgTotal > 0) {
@@ -775,6 +781,7 @@ export default function NGDCheckout() {
       ocCoinsurance,
       totalCoinsurance,
       copaysBlocked,
+      deductibleMetByPvSurg: deductibleCanBeMetByPvSurg,
       specialOcCopayRule,
       copayCollected,
       copayType,
@@ -943,11 +950,21 @@ export default function NGDCheckout() {
 
             {/* Copay Gate */}
             <div className="bg-white rounded-lg p-3 border border-ngd-taupe/30">
-              <h5 className="font-semibold text-ngd-gray mb-2 uppercase tracking-wider text-xs">Step 5-6: Copay Gate & Mutual Exclusion</h5>
+              <h5 className="font-semibold text-ngd-gray mb-2 uppercase tracking-wider text-xs">Step 5-6: Copay Gate & Special Rules</h5>
 
-              {calculations.specialOcCopayRule ? (
+              {calculations.deductibleMetByPvSurg ? (
                 <div className="bg-blue-50 text-blue-700 text-xs p-2 rounded mb-2">
-                  ✓ Special Rule: Deductible met by PV/Surg → OC Copay collected + Coinsurance on PV/Surg remainder
+                  <div className="font-semibold">✓ Deductible fully met by PV/Surg codes</div>
+                  <ul className="mt-1 ml-4 list-disc">
+                    <li>Coinsurance applied to PV/Surg remainder</li>
+                    {calculations.specialOcCopayRule && <li>OC Copay collected (not blocked)</li>}
+                    {calculations.pathTotal > 0 && calculations.pathCoinsurancePct > 0 && (
+                      <li>Path coinsurance applied to pathology</li>
+                    )}
+                    {calculations.pathCopayCollected > 0 && (
+                      <li>Path copay collected</li>
+                    )}
+                  </ul>
                 </div>
               ) : calculations.copaysBlocked ? (
                 <div className="bg-red-50 text-red-700 text-xs p-2 rounded mb-2">
@@ -962,15 +979,20 @@ export default function NGDCheckout() {
               <CalcRow
                 label="OC Copay Available"
                 value={formatCurrency(parseFloat(insurance.officeCallCopay) || 0)}
-                dimmed={calculations.copaysBlocked && !calculations.specialOcCopayRule}
+                dimmed={calculations.copaysBlocked && !calculations.deductibleMetByPvSurg}
               />
               <CalcRow
                 label="PV/Surg Copay Available"
                 value={formatCurrency(parseFloat(insurance.pvSurgCopay) || 0)}
-                dimmed={calculations.copaysBlocked || calculations.specialOcCopayRule}
+                dimmed={calculations.copaysBlocked || calculations.deductibleMetByPvSurg}
+              />
+              <CalcRow
+                label="Path Copay Available"
+                value={formatCurrency(parseFloat(insurance.pathCopay) || 0)}
+                dimmed={(calculations.copaysBlocked && !calculations.deductibleMetByPvSurg) || calculations.pathCoinsurancePct > 0}
               />
 
-              {!calculations.copaysBlocked && !calculations.specialOcCopayRule && calculations.copayType && (
+              {!calculations.copaysBlocked && !calculations.deductibleMetByPvSurg && calculations.copayType && (
                 <div className="text-xs text-ngd-taupe mt-2">
                   Mutual exclusion: Collecting higher of the two
                 </div>
