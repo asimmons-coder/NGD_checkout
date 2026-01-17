@@ -579,7 +579,7 @@ export default function NGDCheckout() {
     const pvSurgCopay = parseFloat(insurance.pvSurgCopay) || 0;
     const pathCopay = parseFloat(insurance.pathCopay) || 0;
 
-    // Deductible waterfall
+    // Deductible waterfall and copay logic
     let remainingDed = deductible;
     let pvSurgTowardsDed = 0;
     let pathTowardsDed = 0;
@@ -588,98 +588,145 @@ export default function NGDCheckout() {
     let pathAfterDed = pathTotal;
     let ocAfterDed = ocTotal;
 
-    if (remainingDed > 0 && pvSurgTotal > 0) {
-      if (pvSurgTotal >= remainingDed) {
-        pvSurgTowardsDed = remainingDed;
-        pvSurgAfterDed = pvSurgTotal - remainingDed;
-        remainingDed = 0;
-      } else {
-        pvSurgTowardsDed = pvSurgTotal;
-        pvSurgAfterDed = 0;
-        remainingDed -= pvSurgTotal;
-      }
-    }
-
-    if (remainingDed > 0 && pathTotal > 0) {
-      if (pathTotal >= remainingDed) {
-        pathTowardsDed = remainingDed;
-        pathAfterDed = pathTotal - remainingDed;
-        remainingDed = 0;
-      } else {
-        pathTowardsDed = pathTotal;
-        pathAfterDed = 0;
-        remainingDed -= pathTotal;
-      }
-    }
-
-    if (remainingDed > 0 && ocTotal > 0) {
-      if (ocTotal >= remainingDed) {
-        ocTowardsDed = remainingDed;
-        ocAfterDed = ocTotal - remainingDed;
-        remainingDed = 0;
-      } else {
-        ocTowardsDed = ocTotal;
-        ocAfterDed = 0;
-        remainingDed -= ocTotal;
-      }
-    }
-
-    const deductibleApplied = pvSurgTowardsDed + pathTowardsDed + ocTowardsDed;
-    const remainingDeductible = remainingDed;
-
     // Coinsurance
     let pvSurgCoinsurance = 0;
     let pathCoinsurance = 0;
     let ocCoinsurance = 0;
-
-    if (coinsurancePct > 0) {
-      pvSurgCoinsurance = pvSurgAfterDed * (coinsurancePct / 100);
-      ocCoinsurance = ocAfterDed * (coinsurancePct / 100);
-    }
-    if (pathCoinsurancePct > 0) {
-      pathCoinsurance = pathAfterDed * (pathCoinsurancePct / 100);
-    }
-
-    const totalCoinsurance = pvSurgCoinsurance + pathCoinsurance + ocCoinsurance;
 
     // Copay logic
     let copayCollected = 0;
     let copayType = null;
     let pathCopayCollected = 0;
 
-    const hasDeductible = deductible > 0;
-    const hasCoinsurance = coinsurancePct > 0 || pathCoinsurancePct > 0;
-    const copaysBlocked = hasDeductible || hasCoinsurance;
+    // Special case: Deductible met by PV/Surg + OC with copay
+    // If deductible is fully met by PV/surg codes AND there's an OC with a copay:
+    // - Charge full deductible (from PV/surg)
+    // - Charge OC copay (not blocked)
+    // - Apply coinsurance to remaining PV/surg amount
+    // - OC does NOT go toward deductible or get coinsurance
+    const deductibleCanBeMetByPvSurg = deductible > 0 && pvSurgTotal >= deductible;
+    const hasOcWithCopay = ocTotal > 0 && ocCopay > 0;
+    const specialOcCopayRule = deductibleCanBeMetByPvSurg && hasOcWithCopay;
+    let copaysBlocked = false;
 
-    if (!copaysBlocked) {
-      if (pvSurgTotal > 0 && ocTotal > 0) {
-        if (pvSurgCopay >= ocCopay) {
+    if (deductibleCanBeMetByPvSurg && hasOcWithCopay) {
+      // Special rule applies
+      pvSurgTowardsDed = deductible;
+      pvSurgAfterDed = pvSurgTotal - deductible;
+      remainingDed = 0;
+
+      // OC does NOT go toward deductible in this case
+      ocTowardsDed = 0;
+      ocAfterDed = 0; // OC doesn't get coinsurance either - copay is collected instead
+
+      // Path still goes through normal waterfall (but deductible already met)
+      pathTowardsDed = 0;
+      pathAfterDed = pathTotal;
+
+      // Apply coinsurance to PV/Surg remainder only
+      if (coinsurancePct > 0) {
+        pvSurgCoinsurance = pvSurgAfterDed * (coinsurancePct / 100);
+      }
+      // Path coinsurance still applies
+      if (pathCoinsurancePct > 0) {
+        pathCoinsurance = pathAfterDed * (pathCoinsurancePct / 100);
+      }
+      // No OC coinsurance - we're collecting copay instead
+
+      // Collect OC copay
+      copayCollected = ocCopay;
+      copayType = 'Office Call Copay';
+
+      // Path copay - still blocked if there's coinsurance on path
+      if (pathTotal > 0 && pathCopay > 0 && pathCoinsurancePct === 0) {
+        pathCopayCollected = pathCopay;
+      }
+    } else {
+      // Standard waterfall logic
+      if (remainingDed > 0 && pvSurgTotal > 0) {
+        if (pvSurgTotal >= remainingDed) {
+          pvSurgTowardsDed = remainingDed;
+          pvSurgAfterDed = pvSurgTotal - remainingDed;
+          remainingDed = 0;
+        } else {
+          pvSurgTowardsDed = pvSurgTotal;
+          pvSurgAfterDed = 0;
+          remainingDed -= pvSurgTotal;
+        }
+      }
+
+      if (remainingDed > 0 && pathTotal > 0) {
+        if (pathTotal >= remainingDed) {
+          pathTowardsDed = remainingDed;
+          pathAfterDed = pathTotal - remainingDed;
+          remainingDed = 0;
+        } else {
+          pathTowardsDed = pathTotal;
+          pathAfterDed = 0;
+          remainingDed -= pathTotal;
+        }
+      }
+
+      if (remainingDed > 0 && ocTotal > 0) {
+        if (ocTotal >= remainingDed) {
+          ocTowardsDed = remainingDed;
+          ocAfterDed = ocTotal - remainingDed;
+          remainingDed = 0;
+        } else {
+          ocTowardsDed = ocTotal;
+          ocAfterDed = 0;
+          remainingDed -= ocTotal;
+        }
+      }
+
+      // Standard coinsurance
+      if (coinsurancePct > 0) {
+        pvSurgCoinsurance = pvSurgAfterDed * (coinsurancePct / 100);
+        ocCoinsurance = ocAfterDed * (coinsurancePct / 100);
+      }
+      if (pathCoinsurancePct > 0) {
+        pathCoinsurance = pathAfterDed * (pathCoinsurancePct / 100);
+      }
+
+      // Standard copay logic
+      const hasDeductible = deductible > 0;
+      const hasCoinsurance = coinsurancePct > 0 || pathCoinsurancePct > 0;
+      copaysBlocked = hasDeductible || hasCoinsurance;
+
+      if (!copaysBlocked) {
+        if (pvSurgTotal > 0 && ocTotal > 0) {
+          if (pvSurgCopay >= ocCopay) {
+            copayCollected = pvSurgCopay;
+            copayType = 'PV/Surg Copay';
+          } else {
+            copayCollected = ocCopay;
+            copayType = 'Office Call Copay';
+          }
+        } else if (pvSurgTotal > 0 && pvSurgCopay > 0) {
           copayCollected = pvSurgCopay;
           copayType = 'PV/Surg Copay';
-        } else {
+        } else if (ocTotal > 0 && ocCopay > 0) {
           copayCollected = ocCopay;
           copayType = 'Office Call Copay';
         }
-      } else if (pvSurgTotal > 0 && pvSurgCopay > 0) {
-        copayCollected = pvSurgCopay;
-        copayType = 'PV/Surg Copay';
-      } else if (ocTotal > 0 && ocCopay > 0) {
-        copayCollected = ocCopay;
-        copayType = 'Office Call Copay';
+
+        if (pathTotal > 0 && pathCopay > 0) {
+          pathCopayCollected = pathCopay;
+        }
       }
 
-      if (pathTotal > 0 && pathCopay > 0) {
-        pathCopayCollected = pathCopay;
+      if (pathTowardsDed > 0) {
+        pathCopayCollected = 0;
+      }
+      if (ocTowardsDed > 0 && copayType === 'Office Call Copay') {
+        copayCollected = 0;
+        copayType = null;
       }
     }
 
-    if (pathTowardsDed > 0) {
-      pathCopayCollected = 0;
-    }
-    if (ocTowardsDed > 0 && copayType === 'Office Call Copay') {
-      copayCollected = 0;
-      copayType = null;
-    }
+    const deductibleApplied = pvSurgTowardsDed + pathTowardsDed + ocTowardsDed;
+    const remainingDeductible = remainingDed;
+    const totalCoinsurance = pvSurgCoinsurance + pathCoinsurance + ocCoinsurance;
 
     const deductibleCollected = deductibleApplied;
     const coinsuranceCollected = totalCoinsurance;
@@ -728,6 +775,7 @@ export default function NGDCheckout() {
       ocCoinsurance,
       totalCoinsurance,
       copaysBlocked,
+      specialOcCopayRule,
       copayCollected,
       copayType,
       pathCopayCollected,
@@ -897,7 +945,11 @@ export default function NGDCheckout() {
             <div className="bg-white rounded-lg p-3 border border-ngd-taupe/30">
               <h5 className="font-semibold text-ngd-gray mb-2 uppercase tracking-wider text-xs">Step 5-6: Copay Gate & Mutual Exclusion</h5>
 
-              {calculations.copaysBlocked ? (
+              {calculations.specialOcCopayRule ? (
+                <div className="bg-blue-50 text-blue-700 text-xs p-2 rounded mb-2">
+                  ✓ Special Rule: Deductible met by PV/Surg → OC Copay collected + Coinsurance on PV/Surg remainder
+                </div>
+              ) : calculations.copaysBlocked ? (
                 <div className="bg-red-50 text-red-700 text-xs p-2 rounded mb-2">
                   ⛔ Copays BLOCKED (deductible or coinsurance exists)
                 </div>
@@ -910,15 +962,15 @@ export default function NGDCheckout() {
               <CalcRow
                 label="OC Copay Available"
                 value={formatCurrency(parseFloat(insurance.officeCallCopay) || 0)}
-                dimmed={calculations.copaysBlocked}
+                dimmed={calculations.copaysBlocked && !calculations.specialOcCopayRule}
               />
               <CalcRow
                 label="PV/Surg Copay Available"
                 value={formatCurrency(parseFloat(insurance.pvSurgCopay) || 0)}
-                dimmed={calculations.copaysBlocked}
+                dimmed={calculations.copaysBlocked || calculations.specialOcCopayRule}
               />
 
-              {!calculations.copaysBlocked && calculations.copayType && (
+              {!calculations.copaysBlocked && !calculations.specialOcCopayRule && calculations.copayType && (
                 <div className="text-xs text-ngd-taupe mt-2">
                   Mutual exclusion: Collecting higher of the two
                 </div>
@@ -1470,7 +1522,7 @@ export default function NGDCheckout() {
                       <span className="ml-2 text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded">Max (100%)</span>
                     )}
                   </div>
-                  {(isSequential || isUnitBased) && (
+                  {(isSequential || isUnitBased || codeData?.isPath) && (
                     <input
                       type="number"
                       min="1"
