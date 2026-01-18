@@ -923,7 +923,10 @@ export default function NGDCheckout() {
         // Standard copay logic
         const hasDeductible = deductible > 0;
         const hasCoinsurance = coinsurancePct > 0 || pathCoinsurancePct > 0;
+        const deductibleFullyMet = remainingDed === 0 && deductible > 0;
+
         if (!hasDeductible && !hasCoinsurance) {
+          // No deductible, no coinsurance - just collect copays
           if (pvSurgTotal > 0 && ocTotal > 0) {
             copayCollected = Math.max(pvSurgCopay, ocCopay);
           } else if (pvSurgTotal > 0) {
@@ -933,6 +936,11 @@ export default function NGDCheckout() {
           }
           if (pathTotal > 0 && pathCopay > 0) {
             copayCollected += pathCopay;
+          }
+        } else if (deductibleFullyMet) {
+          // Deductible fully met through waterfall - collect OC copay
+          if (ocTotal > 0 && ocCopay > 0) {
+            copayCollected += ocCopay;
           }
         }
       }
