@@ -949,8 +949,9 @@ export default function NGDCheckout() {
     }
 
     // New Cosmetic Balance calculation
-    // Formula: (Old CB + Coupons Applied Today + Fillers + Toxins) - (T + F + B)
-    const newCosmeticBalance = (cosmeticData.oldCosmeticBalance + pointsAppliedToday + fillersTotal + toxinsTotal) - tfbPayments;
+    // Formula: Old CB + Toxins + Fillers - T - F - B - Points Applied to CB
+    // Points applied to "Today" reduce patient payment, points applied to "CB" reduce the balance
+    const newCosmeticBalance = cosmeticData.oldCosmeticBalance + toxinsTotal + fillersTotal - tfbPayments - pointsToCB;
 
     // Balance/Credit adjustment
     const balanceAdjustment = balanceCredit.type === 'balance' ? balanceCredit.amount : 0;
