@@ -871,6 +871,46 @@ export default function NGDCheckout() {
   // Render Cosmetic Flow
   const renderCosmeticFlow = () => (
     <div className="space-y-5">
+      {/* Points & Balance Summary - shows what was entered in modals */}
+      <Section title="Points & Balance Info" icon="info">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="bg-ngd-light rounded-lg p-3">
+            <div className="font-medium text-ngd-dark">Alle/BD Points</div>
+            <div className="text-ngd-gray">
+              {cosmeticData.alleAmount > 0
+                ? `$${cosmeticData.alleAmount.toFixed(2)} → ${cosmeticData.alleDestination === 'today' ? 'Today' : 'Cosmetic Balance'}`
+                : 'None'}
+            </div>
+          </div>
+          <div className="bg-ngd-light rounded-lg p-3">
+            <div className="font-medium text-ngd-dark">Aspire Points</div>
+            <div className="text-ngd-gray">
+              {cosmeticData.aspireAmount > 0
+                ? `$${cosmeticData.aspireAmount.toFixed(2)} → ${cosmeticData.aspireDestination === 'today' ? 'Today' : 'Cosmetic Balance'}`
+                : 'None'}
+            </div>
+          </div>
+          <div className="bg-ngd-light rounded-lg p-3">
+            <div className="font-medium text-ngd-dark">Old Cosmetic Balance</div>
+            <div className="text-ngd-gray">
+              {cosmeticData.oldCosmeticBalance > 0
+                ? `$${cosmeticData.oldCosmeticBalance.toFixed(2)}`
+                : 'None'}
+            </div>
+          </div>
+          <div className="bg-ngd-light rounded-lg p-3">
+            <div className="font-medium text-ngd-dark">Balance/Credit</div>
+            <div className="text-ngd-gray">
+              {balanceCredit.type === 'balance'
+                ? `Balance: $${balanceCredit.amount.toFixed(2)}`
+                : balanceCredit.type === 'credit'
+                  ? `Credit: $${balanceCredit.amount.toFixed(2)}`
+                  : 'None'}
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* TFB Entry */}
       <Section title="Cosmetic Payments (T/F/B)" icon="money">
         <div className="grid grid-cols-3 gap-4">
