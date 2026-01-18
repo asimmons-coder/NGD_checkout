@@ -673,14 +673,19 @@ export default function NGDCheckout() {
 
   // Cosmetic services
   const [cosmeticServices, setCosmeticServices] = useState({
-    // Toxins: { selected: 'botox'|'dysport'|'daxxify'|'', price: number }
+    // Toxins: { selected: 'botox'|'dysport'|'', price: number }
     toxins: { selected: '', price: 0 },
     // Fillers: { id: { price, qty } }
     fillers: {},
     // Other: { id: { price, qty } }
     other: {},
+    // Custom Other: [{ name, price }]
+    customOther: [],
     // Waivers: [{ description, amount }]
     waivers: [],
+    // No Charge flags
+    noChargeCosmetic: false,
+    noChargeLaser: false,
   });
 
   // Products
@@ -701,6 +706,50 @@ export default function NGDCheckout() {
   const [procedures, setProcedures] = useState([]);
   const [codeSearch, setCodeSearch] = useState('');
   const [showCodeDropdown, setShowCodeDropdown] = useState(false);
+
+  // Reset all state for new checkout
+  const resetAllState = () => {
+    setHasCosmetics(false);
+    setHasProducts(false);
+    setHasMedical(false);
+    setPatientInfo({ accountNumber: '', doctor: 'fred' });
+    setBalanceCredit({ type: null, amount: 0 });
+    setCosmeticData({
+      oldCosmeticBalance: 0,
+      alleAmount: 0,
+      alleDestination: 'today',
+      aspireAmount: 0,
+      aspireDestination: 'today',
+      toxinPayment: 0,
+      fillerPayment: 0,
+      cosmeticBalancePayment: 0,
+    });
+    setCosmeticServices({
+      toxins: { selected: '', price: 0 },
+      fillers: {},
+      other: {},
+      customOther: [],
+      waivers: [],
+      noChargeCosmetic: false,
+      noChargeLaser: false,
+    });
+    setSelectedProducts([]);
+    setProductSearch('');
+    setInsurance({
+      insurer: '',
+      deductible: '',
+      officeCallCopay: '',
+      pvSurgCopay: '',
+      coinsurance: '',
+      pathCoinsurance: '',
+      pathCopay: '',
+    });
+    setProcedures([]);
+    setCodeSearch('');
+    setShowCodeDropdown(false);
+    changeModal(null);
+    setWizardStep('patient-info');
+  };
 
   const insurerKey = useMemo(() => {
     const entry = Object.entries(INSURANCE_CODES).find(([k]) => k === insurance.insurer);
@@ -744,6 +793,10 @@ export default function NGDCheckout() {
     let otherServicesTotal = 0;
     Object.values(cosmeticServices.other).forEach(o => {
       otherServicesTotal += (o.price || 0) * (o.qty || 1);
+    });
+    // Include custom other services
+    (cosmeticServices.customOther || []).forEach(o => {
+      otherServicesTotal += o.price || 0;
     });
 
     // Waivers (miscellaneous payments - add to total patient pays)
@@ -1101,6 +1154,30 @@ export default function NGDCheckout() {
         </div>
       </Section>
 
+      {/* No Charge Options */}
+      <Section title="No Charge Options" icon="gift">
+        <div className="flex gap-6">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={cosmeticServices.noChargeCosmetic || false}
+              onChange={(e) => setCosmeticServices(s => ({ ...s, noChargeCosmetic: e.target.checked }))}
+              className="w-4 h-4 rounded border-ngd-taupe text-ngd-brown focus:ring-ngd-brown"
+            />
+            <span className="text-sm font-medium">No Charge - Cosmetic</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={cosmeticServices.noChargeLaser || false}
+              onChange={(e) => setCosmeticServices(s => ({ ...s, noChargeLaser: e.target.checked }))}
+              className="w-4 h-4 rounded border-ngd-taupe text-ngd-brown focus:ring-ngd-brown"
+            />
+            <span className="text-sm font-medium">No Charge - Laser</span>
+          </label>
+        </div>
+      </Section>
+
       {/* TFB Entry */}
       <Section title="Cosmetic Payments (T/F/B)" icon="money">
         <div className="grid grid-cols-3 gap-4">
@@ -1244,6 +1321,63 @@ export default function NGDCheckout() {
             </span>
           </div>
         ))}
+
+        {/* Custom Other Services */}
+        {(cosmeticServices.customOther || []).map((item, idx) => (
+          <div key={`custom-${idx}`} className="flex items-center gap-4 mb-3 bg-ngd-light/50 p-2 rounded-lg">
+            <input
+              type="text"
+              value={item.name}
+              onChange={(e) => {
+                setCosmeticServices(s => {
+                  const updated = [...(s.customOther || [])];
+                  updated[idx] = { ...updated[idx], name: e.target.value };
+                  return { ...s, customOther: updated };
+                });
+              }}
+              placeholder="Service name"
+              className="w-32 px-2 py-1 text-sm border border-ngd-taupe/50 rounded"
+            />
+            <Input
+              label="Price"
+              value={item.price || ''}
+              onChange={(v) => {
+                setCosmeticServices(s => {
+                  const updated = [...(s.customOther || [])];
+                  updated[idx] = { ...updated[idx], price: parseFloat(v) || 0 };
+                  return { ...s, customOther: updated };
+                });
+              }}
+              prefix="$"
+              type="number"
+            />
+            <button
+              onClick={() => {
+                setCosmeticServices(s => ({
+                  ...s,
+                  customOther: (s.customOther || []).filter((_, i) => i !== idx)
+                }));
+              }}
+              className="text-red-500 hover:text-red-700 text-sm"
+            >
+              Remove
+            </button>
+            <span className="text-sm text-ngd-gray w-24">
+              = {formatCurrencyAlways(item.price || 0)}
+            </span>
+          </div>
+        ))}
+        <button
+          onClick={() => {
+            setCosmeticServices(s => ({
+              ...s,
+              customOther: [...(s.customOther || []), { name: '', price: 0 }]
+            }));
+          }}
+          className="text-sm text-ngd-brown hover:text-ngd-dark underline"
+        >
+          + Add Custom Service
+        </button>
       </Section>
 
       {/* Waivers - Miscellaneous Payments */}
@@ -1543,6 +1677,12 @@ export default function NGDCheckout() {
               {calculations.fillersTotal > 0 && <CalcRow label="Fillers" value={calculations.fillersTotal} dimmed />}
               {calculations.otherServicesTotal > 0 && <CalcRow label="Other Services" value={calculations.otherServicesTotal} dimmed />}
               {calculations.waiversTotal > 0 && <CalcRow label="Waivers" value={calculations.waiversTotal} dimmed />}
+              {cosmeticServices.noChargeCosmetic && (
+                <div className="text-sm text-green-600 font-medium py-1">No Charge - Cosmetic</div>
+              )}
+              {cosmeticServices.noChargeLaser && (
+                <div className="text-sm text-green-600 font-medium py-1">No Charge - Laser</div>
+              )}
               <CalcRow label="Cosmetic Total" value={calculations.cosmeticTotal} bold />
             </div>
           )}
@@ -1611,10 +1751,7 @@ export default function NGDCheckout() {
             ← Edit
           </button>
           <button
-            onClick={() => {
-              setWizardStep('patient-info');
-              // Reset all state for new checkout
-            }}
+            onClick={resetAllState}
             className="flex-1 bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
           >
             New Checkout
