@@ -552,31 +552,27 @@ export default function NGDCheckout() {
 
   // Calculations
   const calculations = useMemo(() => {
-    // Cosmetic Services Total
-    let cosmeticServicesTotal = 0;
-
-    // Toxins total (for cosmetic balance calc)
+    // Toxins total
     const toxinsTotal = cosmeticServices.toxins.selected && cosmeticServices.toxins.price > 0
       ? cosmeticServices.toxins.price
       : 0;
-    cosmeticServicesTotal += toxinsTotal;
 
-    // Fillers total (for cosmetic balance calc)
+    // Fillers total
     let fillersTotal = 0;
     Object.values(cosmeticServices.fillers).forEach(f => {
       fillersTotal += (f.price || 0) * (f.qty || 1);
     });
-    cosmeticServicesTotal += fillersTotal;
 
-    // Other services
+    // Other services total (these ARE part of what patient pays today)
+    let otherServicesTotal = 0;
     Object.values(cosmeticServices.other).forEach(o => {
-      cosmeticServicesTotal += (o.price || 0) * (o.qty || 1);
+      otherServicesTotal += (o.price || 0) * (o.qty || 1);
     });
 
-    // Waivers (miscellaneous payments - add to total)
+    // Waivers (miscellaneous payments - add to total patient pays)
     const waiversTotal = cosmeticServices.waivers.reduce((sum, w) => sum + (parseFloat(w.amount) || 0), 0);
 
-    // Points applied today
+    // Points applied today (reduce what patient pays)
     const alleToday = cosmeticData.alleDestination === 'today' ? cosmeticData.alleAmount : 0;
     const aspireToday = cosmeticData.aspireDestination === 'today' ? cosmeticData.aspireAmount : 0;
     const pointsAppliedToday = alleToday + aspireToday;
@@ -586,11 +582,12 @@ export default function NGDCheckout() {
     const aspireToCB = cosmeticData.aspireDestination === 'cb' ? cosmeticData.aspireAmount : 0;
     const pointsToCB = alleToCB + aspireToCB;
 
-    // T + F + B payments
+    // T + F + B payments (what patient is paying for toxins/fillers/balance)
     const tfbPayments = cosmeticData.toxinPayment + cosmeticData.fillerPayment + cosmeticData.cosmeticBalancePayment;
 
-    // Cosmetic Total (just services, waivers are separate misc payments)
-    const cosmeticTotal = cosmeticServicesTotal;
+    // Cosmetic Total (for DISPLAY) = Toxins + Fillers + Other Services + Waivers
+    // This shows the total value of cosmetic services performed
+    const cosmeticTotal = toxinsTotal + fillersTotal + otherServicesTotal + waiversTotal;
 
     // Products Total
     const productTotal = selectedProducts.reduce((sum, p) => sum + (p.price || 0), 0);
@@ -774,16 +771,23 @@ export default function NGDCheckout() {
     const balanceAdjustment = balanceCredit.type === 'balance' ? balanceCredit.amount : 0;
     const creditAdjustment = balanceCredit.type === 'credit' ? balanceCredit.amount : 0;
 
-    // Total Due calculation
-    // Cosmetic payments (T+F+B) cover the cosmetic services
-    // Points applied today (coupons) reduce what's owed
-    const cosmeticDueToday = Math.max(0, cosmeticTotal - tfbPayments - pointsAppliedToday);
-
-    // Waivers are misc payments that add to total due
-    const totalDue = cosmeticDueToday + productTotal + medicalDue + waiversTotal + balanceAdjustment - creditAdjustment;
+    // Total Due Today calculation
+    // Formula: T + F + B - Points Applied Today + Waivers + Other Services (NOT toxins/fillers) + Products + Medical + Balance - Credit
+    // Note: Toxins and Fillers prices are NOT part of what patient pays today - those are covered by T and F payments
+    const totalDue =
+      tfbPayments                    // T + F + B (payments for toxins/fillers/balance)
+      - pointsAppliedToday           // - Alle/Aspire points applied today (coupons reduce payment)
+      + waiversTotal                 // + Waivers (misc payments)
+      + otherServicesTotal           // + Other cosmetic services (NOT toxins/fillers)
+      + productTotal                 // + Products
+      + medicalDue                   // + Medical
+      + balanceAdjustment            // + Balance owed
+      - creditAdjustment;            // - Credit available
 
     return {
-      cosmeticServicesTotal,
+      toxinsTotal,
+      fillersTotal,
+      otherServicesTotal,
       waiversTotal,
       cosmeticTotal,
       productTotal,
@@ -1348,16 +1352,22 @@ export default function NGDCheckout() {
         <div className="space-y-4">
           {hasCosmetics && (
             <div className="bg-ngd-light rounded-lg p-4">
-              <h4 className="font-semibold text-ngd-dark mb-2">Cosmetic</h4>
-              <CalcRow label="Services Total" value={calculations.cosmeticServicesTotal} />
-              {calculations.waiversTotal > 0 && (
-                <CalcRow label="Misc Payments (Waivers)" value={calculations.waiversTotal} />
-              )}
+              <h4 className="font-semibold text-ngd-dark mb-2">Cosmetic Services (Reference)</h4>
+              {calculations.toxinsTotal > 0 && <CalcRow label="Toxins" value={calculations.toxinsTotal} dimmed />}
+              {calculations.fillersTotal > 0 && <CalcRow label="Fillers" value={calculations.fillersTotal} dimmed />}
+              {calculations.otherServicesTotal > 0 && <CalcRow label="Other Services" value={calculations.otherServicesTotal} dimmed />}
+              {calculations.waiversTotal > 0 && <CalcRow label="Waivers" value={calculations.waiversTotal} dimmed />}
               <CalcRow label="Cosmetic Total" value={calculations.cosmeticTotal} bold />
-              <div className="border-t border-ngd-taupe/30 mt-2 pt-2">
-                <CalcRow label="T + F + B Payments" value={calculations.tfbPayments} />
-                <CalcRow label="Points Applied Today" value={calculations.pointsAppliedToday} />
-              </div>
+            </div>
+          )}
+
+          {hasCosmetics && (
+            <div className="bg-ngd-light rounded-lg p-4">
+              <h4 className="font-semibold text-ngd-dark mb-2">Patient Pays (Cosmetic)</h4>
+              <CalcRow label="T + F + B" value={calculations.tfbPayments} />
+              {calculations.pointsAppliedToday > 0 && <CalcRow label="Points Applied" value={-calculations.pointsAppliedToday} />}
+              {calculations.waiversTotal > 0 && <CalcRow label="Waivers" value={calculations.waiversTotal} />}
+              {calculations.otherServicesTotal > 0 && <CalcRow label="Other Services" value={calculations.otherServicesTotal} />}
             </div>
           )}
 
