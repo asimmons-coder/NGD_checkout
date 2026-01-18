@@ -72,15 +72,15 @@ const ALL_PRODUCTS = Object.values(PRODUCTS).flat();
 // Cosmetic service items
 const COSMETIC_SERVICES = {
   toxins: [
-    { id: 'botox', name: 'Botox', unitPrice: 15 },
-    { id: 'dysport', name: 'Dysport', unitPrice: 5 },
-    { id: 'daxxify', name: 'Daxxify', unitPrice: 12 },
+    { id: 'botox', name: 'Botox' },
+    { id: 'dysport', name: 'Dysport' },
   ],
   fillers: [
     { id: 'contour', name: 'Contour', defaultPrice: 850 },
     { id: 'voluma', name: 'Voluma', defaultPrice: 950 },
   ],
   other: [
+    { id: 'daxxify', name: 'Daxxify', defaultPrice: 0 },
     { id: 'skinvive', name: 'Skinvive', defaultPrice: 650 },
     { id: 'sclero', name: 'Sclerotherapy', defaultPrice: 350 },
     { id: 'kybella', name: 'Kybella', defaultPrice: 750 },
@@ -272,9 +272,17 @@ const CalcRow = ({ label, value, indent, bold, highlight, dimmed }) => (
 );
 
 // Gate Question Modal
-const GateModal = ({ question, onYes, onNo }) => (
+const GateModal = ({ question, onYes, onNo, onBack, onClose }) => (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
+    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 relative">
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-ngd-gray hover:text-ngd-dark text-xl font-bold"
+        >
+          ✕
+        </button>
+      )}
       <h2 className="text-xl font-semibold text-ngd-dark mb-6 text-center">{question}</h2>
       <div className="flex gap-4">
         <button
@@ -290,14 +298,30 @@ const GateModal = ({ question, onYes, onNo }) => (
           No
         </button>
       </div>
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="w-full mt-4 text-ngd-gray hover:text-ngd-dark text-sm font-medium"
+        >
+          ← Back
+        </button>
+      )}
     </div>
   </div>
 );
 
 // Three Choice Modal (Balance/Credit/None)
-const ThreeChoiceModal = ({ title, options, onSelect }) => (
+const ThreeChoiceModal = ({ title, options, onSelect, onBack, onClose }) => (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
+    <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 relative">
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-ngd-gray hover:text-ngd-dark text-xl font-bold"
+        >
+          ✕
+        </button>
+      )}
       <h2 className="text-xl font-semibold text-ngd-dark mb-6 text-center">{title}</h2>
       <div className="flex flex-col gap-3">
         {options.map((opt) => (
@@ -310,16 +334,32 @@ const ThreeChoiceModal = ({ title, options, onSelect }) => (
           </button>
         ))}
       </div>
+      {onBack && (
+        <button
+          onClick={onBack}
+          className="w-full mt-4 text-ngd-gray hover:text-ngd-dark text-sm font-medium"
+        >
+          ← Back
+        </button>
+      )}
     </div>
   </div>
 );
 
 // Amount Entry Modal
-const AmountModal = ({ title, label, onSubmit, onCancel }) => {
+const AmountModal = ({ title, label, onSubmit, onBack, onClose }) => {
   const [amount, setAmount] = useState('');
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 relative">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-ngd-gray hover:text-ngd-dark text-xl font-bold"
+          >
+            ✕
+          </button>
+        )}
         <h2 className="text-xl font-semibold text-ngd-dark mb-4 text-center">{title}</h2>
         <Input label={label} value={amount} onChange={setAmount} prefix="$" type="number" />
         <div className="flex gap-4 mt-6">
@@ -329,25 +369,35 @@ const AmountModal = ({ title, label, onSubmit, onCancel }) => {
           >
             Continue
           </button>
-          <button
-            onClick={onCancel}
-            className="flex-1 bg-ngd-light text-ngd-dark py-3 rounded-xl font-semibold hover:bg-ngd-taupe/30 transition-colors border border-ngd-taupe/30"
-          >
-            Cancel
-          </button>
         </div>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="w-full mt-4 text-ngd-gray hover:text-ngd-dark text-sm font-medium"
+          >
+            ← Back
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
 // Points Modal (Alle/BD or Aspire with Today/CB choice)
-const PointsModal = ({ title, onSubmit, onSkip }) => {
+const PointsModal = ({ title, onSubmit, onSkip, onBack, onClose }) => {
   const [amount, setAmount] = useState('');
   const [destination, setDestination] = useState('today');
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 relative">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-ngd-gray hover:text-ngd-dark text-xl font-bold"
+          >
+            ✕
+          </button>
+        )}
         <h2 className="text-xl font-semibold text-ngd-dark mb-4 text-center">{title}</h2>
         <Input label="Amount" value={amount} onChange={setAmount} prefix="$" type="number" />
         <div className="mt-4">
@@ -389,6 +439,14 @@ const PointsModal = ({ title, onSubmit, onSkip }) => {
             Skip
           </button>
         </div>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="w-full mt-4 text-ngd-gray hover:text-ngd-dark text-sm font-medium"
+          >
+            ← Back
+          </button>
+        )}
       </div>
     </div>
   );
@@ -396,7 +454,8 @@ const PointsModal = ({ title, onSubmit, onSkip }) => {
 
 export default function NGDCheckout() {
   // Flow state
-  const [wizardStep, setWizardStep] = useState('patient-info'); // patient-info, cosmetic-gate, cosmetic-flow, products-gate, products, medical-gate, medical, summary
+  // Order: patient-info → balance-credit-gate → cosmetic-gate → (if yes) old-cosmetic-balance → alle → aspire → cosmetic-flow → products-gate → products → medical-gate → medical → summary
+  const [wizardStep, setWizardStep] = useState('patient-info');
   const [showModal, setShowModal] = useState(null);
 
   // Flags for what sections apply
@@ -507,7 +566,7 @@ export default function NGDCheckout() {
       cosmeticServicesTotal += (o.price || 0) * (o.qty || 1);
     });
 
-    // Waivers (subtractions)
+    // Waivers (miscellaneous payments - add to total)
     const waiversTotal = cosmeticServices.waivers.reduce((sum, w) => sum + (parseFloat(w.amount) || 0), 0);
 
     // Points applied today
@@ -523,8 +582,8 @@ export default function NGDCheckout() {
     // T + F + B payments
     const tfbPayments = cosmeticData.toxinPayment + cosmeticData.fillerPayment + cosmeticData.cosmeticBalancePayment;
 
-    // Cosmetic Total (services - waivers)
-    const cosmeticTotal = Math.max(0, cosmeticServicesTotal - waiversTotal);
+    // Cosmetic Total (just services, waivers are separate misc payments)
+    const cosmeticTotal = cosmeticServicesTotal;
 
     // Products Total
     const productTotal = selectedProducts.reduce((sum, p) => sum + (p.price || 0), 0);
@@ -709,11 +768,12 @@ export default function NGDCheckout() {
     const creditAdjustment = balanceCredit.type === 'credit' ? balanceCredit.amount : 0;
 
     // Total Due calculation
-    // Cosmetic payments (T+F+B) + Points applied today cover the cosmetic services
-    const cosmeticPayments = tfbPayments + pointsAppliedToday;
-    const cosmeticDueToday = Math.max(0, cosmeticTotal - cosmeticPayments);
+    // Cosmetic payments (T+F+B) cover the cosmetic services
+    // Points applied today (coupons) reduce what's owed
+    const cosmeticDueToday = Math.max(0, cosmeticTotal - tfbPayments - pointsAppliedToday);
 
-    const totalDue = cosmeticDueToday + productTotal + medicalDue + balanceAdjustment - creditAdjustment;
+    // Waivers are misc payments that add to total due
+    const totalDue = cosmeticDueToday + productTotal + medicalDue + waiversTotal + balanceAdjustment - creditAdjustment;
 
     return {
       cosmeticServicesTotal,
@@ -792,7 +852,7 @@ export default function NGDCheckout() {
         </div>
 
         <button
-          onClick={() => setWizardStep('cosmetic-gate')}
+          onClick={() => setShowModal('balance-credit')}
           className="w-full bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors mt-4"
         >
           Continue
@@ -949,8 +1009,8 @@ export default function NGDCheckout() {
         ))}
       </Section>
 
-      {/* Waivers */}
-      <Section title="Waivers / Discounts" icon="tag">
+      {/* Waivers - Miscellaneous Payments */}
+      <Section title="Miscellaneous Payments (Waivers)" icon="tag">
         {cosmeticServices.waivers.map((waiver, idx) => (
           <div key={idx} className="flex items-center gap-4 mb-3">
             <input
@@ -1001,12 +1061,20 @@ export default function NGDCheckout() {
         </button>
       </Section>
 
-      <button
-        onClick={() => setWizardStep('products-gate')}
-        className="w-full bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
-      >
-        Continue to Products
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setShowModal('aspire-points')}
+          className="flex-1 bg-ngd-light text-ngd-dark py-3 rounded-xl font-semibold hover:bg-ngd-taupe/30 transition-colors border border-ngd-taupe/30"
+        >
+          ← Back
+        </button>
+        <button
+          onClick={() => setWizardStep('products-gate')}
+          className="flex-1 bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
+        >
+          Continue →
+        </button>
+      </div>
     </div>
   );
 
@@ -1062,12 +1130,20 @@ export default function NGDCheckout() {
         )}
       </Section>
 
-      <button
-        onClick={() => setWizardStep('medical-gate')}
-        className="w-full bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
-      >
-        Continue to Medical
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setWizardStep('products-gate')}
+          className="flex-1 bg-ngd-light text-ngd-dark py-3 rounded-xl font-semibold hover:bg-ngd-taupe/30 transition-colors border border-ngd-taupe/30"
+        >
+          ← Back
+        </button>
+        <button
+          onClick={() => setWizardStep('medical-gate')}
+          className="flex-1 bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
+        >
+          Continue →
+        </button>
+      </div>
     </div>
   );
 
@@ -1201,12 +1277,20 @@ export default function NGDCheckout() {
         )}
       </Section>
 
-      <button
-        onClick={() => setWizardStep('summary')}
-        className="w-full bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
-      >
-        View Summary
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setWizardStep('medical-gate')}
+          className="flex-1 bg-ngd-light text-ngd-dark py-3 rounded-xl font-semibold hover:bg-ngd-taupe/30 transition-colors border border-ngd-taupe/30"
+        >
+          ← Back
+        </button>
+        <button
+          onClick={() => setWizardStep('summary')}
+          className="flex-1 bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
+        >
+          View Summary →
+        </button>
+      </div>
     </div>
   );
 
@@ -1220,7 +1304,7 @@ export default function NGDCheckout() {
               <h4 className="font-semibold text-ngd-dark mb-2">Cosmetic</h4>
               <CalcRow label="Services Total" value={calculations.cosmeticServicesTotal} />
               {calculations.waiversTotal > 0 && (
-                <CalcRow label="Waivers/Discounts" value={-calculations.waiversTotal} />
+                <CalcRow label="Misc Payments (Waivers)" value={calculations.waiversTotal} />
               )}
               <CalcRow label="Cosmetic Total" value={calculations.cosmeticTotal} bold />
               <div className="border-t border-ngd-taupe/30 mt-2 pt-2">
@@ -1270,34 +1354,48 @@ export default function NGDCheckout() {
           </div>
         </div>
 
-        <button
-          onClick={() => {
-            setWizardStep('patient-info');
-            // Reset all state for new checkout
-          }}
-          className="w-full bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors mt-4"
-        >
-          New Checkout
-        </button>
+        <div className="flex gap-4 mt-4">
+          <button
+            onClick={() => {
+              // Go back to edit - determine which section to edit based on what's active
+              if (hasMedical) setWizardStep('medical');
+              else if (hasProducts) setWizardStep('products');
+              else if (hasCosmetics) setWizardStep('cosmetic-flow');
+              else setWizardStep('patient-info');
+            }}
+            className="flex-1 bg-ngd-light text-ngd-dark py-3 rounded-xl font-semibold hover:bg-ngd-taupe/30 transition-colors border border-ngd-taupe/30"
+          >
+            ← Edit
+          </button>
+          <button
+            onClick={() => {
+              setWizardStep('patient-info');
+              // Reset all state for new checkout
+            }}
+            className="flex-1 bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors"
+          >
+            New Checkout
+          </button>
+        </div>
       </Section>
     </div>
   );
 
-  // Modal handlers
-  const handleCosmeticGateYes = () => {
-    setHasCosmetics(true);
-    setShowModal('balance-credit');
+  // Close flow and go back to patient info
+  const handleCloseFlow = () => {
+    setShowModal(null);
+    setWizardStep('patient-info');
   };
 
-  const handleCosmeticGateNo = () => {
-    setHasCosmetics(false);
-    setWizardStep('products-gate');
-  };
+  // Modal handlers - New Flow Order:
+  // patient-info → balance-credit → cosmetic-gate → (if yes) old-cb → alle → aspire → cosmetic-flow
 
+  // Balance/Credit selection (comes FIRST after patient info)
   const handleBalanceCreditSelect = (type) => {
     if (type === 'none') {
       setBalanceCredit({ type: 'none', amount: 0 });
-      setShowModal('old-cosmetic-balance');
+      setShowModal(null);
+      setWizardStep('cosmetic-gate');
     } else {
       setBalanceCredit(prev => ({ ...prev, type }));
       setShowModal(`${type}-amount`);
@@ -1306,12 +1404,25 @@ export default function NGDCheckout() {
 
   const handleBalanceAmount = (amount) => {
     setBalanceCredit({ type: 'balance', amount });
-    setShowModal('old-cosmetic-balance');
+    setShowModal(null);
+    setWizardStep('cosmetic-gate');
   };
 
   const handleCreditAmount = (amount) => {
     setBalanceCredit({ type: 'credit', amount });
+    setShowModal(null);
+    setWizardStep('cosmetic-gate');
+  };
+
+  // Cosmetic gate (comes AFTER balance/credit)
+  const handleCosmeticGateYes = () => {
+    setHasCosmetics(true);
     setShowModal('old-cosmetic-balance');
+  };
+
+  const handleCosmeticGateNo = () => {
+    setHasCosmetics(false);
+    setWizardStep('products-gate');
   };
 
   const handleOldCosmeticBalance = (amount) => {
@@ -1390,6 +1501,8 @@ export default function NGDCheckout() {
             question="Did the patient do cosmetics or patient pay procedures today?"
             onYes={handleCosmeticGateYes}
             onNo={handleCosmeticGateNo}
+            onBack={() => setShowModal('balance-credit')}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1398,6 +1511,8 @@ export default function NGDCheckout() {
             question="Did the patient get any products today?"
             onYes={handleProductsGateYes}
             onNo={handleProductsGateNo}
+            onBack={() => hasCosmetics ? setWizardStep('cosmetic-flow') : setWizardStep('cosmetic-gate')}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1406,10 +1521,12 @@ export default function NGDCheckout() {
             question="Did the patient have any medical procedures or office call today?"
             onYes={handleMedicalGateYes}
             onNo={handleMedicalGateNo}
+            onBack={() => hasProducts ? setWizardStep('products') : setWizardStep('products-gate')}
+            onClose={handleCloseFlow}
           />
         )}
 
-        {/* Cosmetic Flow Modals */}
+        {/* Flow Modals */}
         {showModal === 'balance-credit' && (
           <ThreeChoiceModal
             title="Does the patient have a balance, credit, or neither?"
@@ -1419,6 +1536,8 @@ export default function NGDCheckout() {
               { value: 'none', label: 'None' },
             ]}
             onSelect={handleBalanceCreditSelect}
+            onBack={() => { setShowModal(null); setWizardStep('patient-info'); }}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1427,7 +1546,8 @@ export default function NGDCheckout() {
             title="Enter Balance Amount"
             label="Balance Owed"
             onSubmit={handleBalanceAmount}
-            onCancel={() => setShowModal('balance-credit')}
+            onBack={() => setShowModal('balance-credit')}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1436,7 +1556,8 @@ export default function NGDCheckout() {
             title="Enter Credit Amount"
             label="Credit Available"
             onSubmit={handleCreditAmount}
-            onCancel={() => setShowModal('balance-credit')}
+            onBack={() => setShowModal('balance-credit')}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1445,7 +1566,8 @@ export default function NGDCheckout() {
             title="Old Cosmetic Balance"
             label="Enter from patient alerts"
             onSubmit={handleOldCosmeticBalance}
-            onCancel={() => setShowModal('balance-credit')}
+            onBack={() => setWizardStep('cosmetic-gate')}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1454,6 +1576,8 @@ export default function NGDCheckout() {
             title="Alle/BD Points"
             onSubmit={handleAllePoints}
             onSkip={() => setShowModal('aspire-points')}
+            onBack={() => setShowModal('old-cosmetic-balance')}
+            onClose={handleCloseFlow}
           />
         )}
 
@@ -1465,6 +1589,8 @@ export default function NGDCheckout() {
               setShowModal(null);
               setWizardStep('cosmetic-flow');
             }}
+            onBack={() => setShowModal('alle-points')}
+            onClose={handleCloseFlow}
           />
         )}
       </div>
