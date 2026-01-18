@@ -430,8 +430,8 @@ export default function NGDCheckout() {
 
   // Cosmetic services
   const [cosmeticServices, setCosmeticServices] = useState({
-    // Toxins: { id: { units, total } }
-    toxins: {},
+    // Toxins: { selected: 'botox'|'dysport'|'daxxify'|'', price: number }
+    toxins: { selected: '', price: 0 },
     // Fillers: { id: { price, qty } }
     fillers: {},
     // Other: { id: { price, qty } }
@@ -489,15 +489,18 @@ export default function NGDCheckout() {
     // Cosmetic Services Total
     let cosmeticServicesTotal = 0;
 
-    // Toxins
-    Object.values(cosmeticServices.toxins).forEach(t => {
-      cosmeticServicesTotal += t.total || 0;
-    });
+    // Toxins total (for cosmetic balance calc)
+    const toxinsTotal = cosmeticServices.toxins.selected && cosmeticServices.toxins.price > 0
+      ? cosmeticServices.toxins.price
+      : 0;
+    cosmeticServicesTotal += toxinsTotal;
 
-    // Fillers
+    // Fillers total (for cosmetic balance calc)
+    let fillersTotal = 0;
     Object.values(cosmeticServices.fillers).forEach(f => {
-      cosmeticServicesTotal += (f.price || 0) * (f.qty || 1);
+      fillersTotal += (f.price || 0) * (f.qty || 1);
     });
+    cosmeticServicesTotal += fillersTotal;
 
     // Other services
     Object.values(cosmeticServices.other).forEach(o => {
@@ -698,7 +701,8 @@ export default function NGDCheckout() {
     }
 
     // New Cosmetic Balance calculation
-    const newCosmeticBalance = cosmeticData.oldCosmeticBalance + pointsToCB - cosmeticData.cosmeticBalancePayment;
+    // Formula: (Old CB + Coupons Applied Today + Fillers + Toxins) - (T + F + B)
+    const newCosmeticBalance = (cosmeticData.oldCosmeticBalance + pointsAppliedToday + fillersTotal + toxinsTotal) - tfbPayments;
 
     // Balance/Credit adjustment
     const balanceAdjustment = balanceCredit.type === 'balance' ? balanceCredit.amount : 0;
@@ -829,29 +833,38 @@ export default function NGDCheckout() {
 
       {/* Toxins */}
       <Section title="Toxins (Botox/Dysport)" icon="syringe">
-        {COSMETIC_SERVICES.toxins.map(toxin => (
-          <div key={toxin.id} className="flex items-center gap-4 mb-3">
-            <label className="w-24 text-sm font-medium">{toxin.name}</label>
-            <Input
-              label="Units"
-              value={cosmeticServices.toxins[toxin.id]?.units || ''}
-              onChange={(v) => {
-                const units = parseInt(v) || 0;
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <label className="block text-xs font-medium text-ngd-gray mb-1">Select Toxin</label>
+            <select
+              value={cosmeticServices.toxins.selected}
+              onChange={(e) => {
                 setCosmeticServices(s => ({
                   ...s,
-                  toxins: {
-                    ...s.toxins,
-                    [toxin.id]: { units, total: units * toxin.unitPrice }
-                  }
+                  toxins: { ...s.toxins, selected: e.target.value }
                 }));
               }}
-              type="number"
-            />
-            <span className="text-sm text-ngd-gray">
-              @ ${toxin.unitPrice}/unit = {formatCurrencyAlways((cosmeticServices.toxins[toxin.id]?.units || 0) * toxin.unitPrice)}
-            </span>
+              className="w-full px-3 py-2.5 bg-ngd-light border-0 rounded-lg text-sm focus:ring-2 focus:ring-ngd-brown"
+            >
+              <option value="">-- Select --</option>
+              {COSMETIC_SERVICES.toxins.map(t => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
           </div>
-        ))}
+          <Input
+            label="Price"
+            value={cosmeticServices.toxins.price || ''}
+            onChange={(v) => {
+              setCosmeticServices(s => ({
+                ...s,
+                toxins: { ...s.toxins, price: parseFloat(v) || 0 }
+              }));
+            }}
+            prefix="$"
+            type="number"
+          />
+        </div>
       </Section>
 
       {/* Fillers */}
