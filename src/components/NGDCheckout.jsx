@@ -457,6 +457,13 @@ export default function NGDCheckout() {
   // Order: patient-info → balance-credit-gate → cosmetic-gate → (if yes) old-cosmetic-balance → alle → aspire → cosmetic-flow → products-gate → products → medical-gate → medical → summary
   const [wizardStep, setWizardStep] = useState('patient-info');
   const [showModal, setShowModal] = useState(null);
+  const [modalKey, setModalKey] = useState(0); // Counter to force modal remount
+
+  // Wrapper to change modal and force fresh render
+  const changeModal = (modal) => {
+    setModalKey(k => k + 1);
+    setShowModal(modal);
+  };
 
   // Flags for what sections apply
   const [hasCosmetics, setHasCosmetics] = useState(false);
@@ -852,7 +859,7 @@ export default function NGDCheckout() {
         </div>
 
         <button
-          onClick={() => setShowModal('balance-credit')}
+          onClick={() => changeModal('balance-credit')}
           className="w-full bg-ngd-brown text-white py-3 rounded-xl font-semibold hover:bg-ngd-dark transition-colors mt-4"
         >
           Continue
@@ -1063,7 +1070,7 @@ export default function NGDCheckout() {
 
       <div className="flex gap-4">
         <button
-          onClick={() => setShowModal('aspire-points')}
+          onClick={() => changeModal('aspire-points')}
           className="flex-1 bg-ngd-light text-ngd-dark py-3 rounded-xl font-semibold hover:bg-ngd-taupe/30 transition-colors border border-ngd-taupe/30"
         >
           ← Back
@@ -1383,7 +1390,7 @@ export default function NGDCheckout() {
 
   // Close flow and go back to patient info
   const handleCloseFlow = () => {
-    setShowModal(null);
+    changeModal(null);
     setWizardStep('patient-info');
   };
 
@@ -1394,30 +1401,30 @@ export default function NGDCheckout() {
   const handleBalanceCreditSelect = (type) => {
     if (type === 'none') {
       setBalanceCredit({ type: 'none', amount: 0 });
-      setShowModal(null);
+      changeModal(null);
       setWizardStep('cosmetic-gate');
     } else {
       setBalanceCredit(prev => ({ ...prev, type }));
-      setShowModal(`${type}-amount`);
+      changeModal(`${type}-amount`);
     }
   };
 
   const handleBalanceAmount = (amount) => {
     setBalanceCredit({ type: 'balance', amount });
-    setShowModal(null);
+    changeModal(null);
     setWizardStep('cosmetic-gate');
   };
 
   const handleCreditAmount = (amount) => {
     setBalanceCredit({ type: 'credit', amount });
-    setShowModal(null);
+    changeModal(null);
     setWizardStep('cosmetic-gate');
   };
 
   // Cosmetic gate (comes AFTER balance/credit)
   const handleCosmeticGateYes = () => {
     setHasCosmetics(true);
-    setShowModal('old-cosmetic-balance');
+    changeModal('old-cosmetic-balance');
   };
 
   const handleCosmeticGateNo = () => {
@@ -1427,17 +1434,17 @@ export default function NGDCheckout() {
 
   const handleOldCosmeticBalance = (amount) => {
     setCosmeticData(d => ({ ...d, oldCosmeticBalance: amount }));
-    setShowModal('alle-points');
+    changeModal('alle-points');
   };
 
   const handleAllePoints = (amount, destination) => {
     setCosmeticData(d => ({ ...d, alleAmount: amount, alleDestination: destination }));
-    setShowModal('aspire-points');
+    changeModal('aspire-points');
   };
 
   const handleAspirePoints = (amount, destination) => {
     setCosmeticData(d => ({ ...d, aspireAmount: amount, aspireDestination: destination }));
-    setShowModal(null);
+    changeModal(null);
     setWizardStep('cosmetic-flow');
   };
 
@@ -1501,7 +1508,7 @@ export default function NGDCheckout() {
             question="Did the patient do cosmetics or patient pay procedures today?"
             onYes={handleCosmeticGateYes}
             onNo={handleCosmeticGateNo}
-            onBack={() => setShowModal('balance-credit')}
+            onBack={() => changeModal('balance-credit')}
             onClose={handleCloseFlow}
           />
         )}
@@ -1536,33 +1543,36 @@ export default function NGDCheckout() {
               { value: 'none', label: 'None' },
             ]}
             onSelect={handleBalanceCreditSelect}
-            onBack={() => { setShowModal(null); setWizardStep('patient-info'); }}
+            onBack={() => { changeModal(null); setWizardStep('patient-info'); }}
             onClose={handleCloseFlow}
           />
         )}
 
         {showModal === 'balance-amount' && (
           <AmountModal
+            key={`balance-amount-${modalKey}`}
             title="Enter Balance Amount"
             label="Balance Owed"
             onSubmit={handleBalanceAmount}
-            onBack={() => setShowModal('balance-credit')}
+            onBack={() => changeModal('balance-credit')}
             onClose={handleCloseFlow}
           />
         )}
 
         {showModal === 'credit-amount' && (
           <AmountModal
+            key={`credit-amount-${modalKey}`}
             title="Enter Credit Amount"
             label="Credit Available"
             onSubmit={handleCreditAmount}
-            onBack={() => setShowModal('balance-credit')}
+            onBack={() => changeModal('balance-credit')}
             onClose={handleCloseFlow}
           />
         )}
 
         {showModal === 'old-cosmetic-balance' && (
           <AmountModal
+            key={`old-cosmetic-balance-${modalKey}`}
             title="Old Cosmetic Balance"
             label="Enter from patient alerts"
             onSubmit={handleOldCosmeticBalance}
@@ -1573,23 +1583,25 @@ export default function NGDCheckout() {
 
         {showModal === 'alle-points' && (
           <PointsModal
+            key={`alle-points-${modalKey}`}
             title="Alle/BD Points"
             onSubmit={handleAllePoints}
-            onSkip={() => setShowModal('aspire-points')}
-            onBack={() => setShowModal('old-cosmetic-balance')}
+            onSkip={() => changeModal('aspire-points')}
+            onBack={() => changeModal('old-cosmetic-balance')}
             onClose={handleCloseFlow}
           />
         )}
 
         {showModal === 'aspire-points' && (
           <PointsModal
+            key={`aspire-points-${modalKey}`}
             title="Aspire Points"
             onSubmit={handleAspirePoints}
             onSkip={() => {
-              setShowModal(null);
+              changeModal(null);
               setWizardStep('cosmetic-flow');
             }}
-            onBack={() => setShowModal('alle-points')}
+            onBack={() => changeModal('alle-points')}
             onClose={handleCloseFlow}
           />
         )}
