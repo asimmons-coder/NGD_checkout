@@ -406,7 +406,9 @@ const PROCEDURE_CODES = {
 // Utility functions
 const formatCurrency = (val) => {
   const num = parseFloat(val) || 0;
-  return num === 0 ? '-' : `$${num.toFixed(2)}`;
+  if (num === 0) return '-';
+  if (num < 0) return `-$${Math.abs(num).toFixed(2)}`;
+  return `$${num.toFixed(2)}`;
 };
 
 const formatCurrencyAlways = (val) => `$${(parseFloat(val) || 0).toFixed(2)}`;
@@ -1002,9 +1004,21 @@ export default function NGDCheckout() {
     }
 
     // New Cosmetic Balance calculation
-    // Formula: Old CB + Toxins + Fillers - T - F - B - Points Applied to CB
-    // Points applied to "Today" reduce patient payment, points applied to "CB" reduce the balance
-    const newCosmeticBalance = cosmeticData.oldCosmeticBalance + toxinsTotal + fillersTotal - tfbPayments - pointsToCB;
+    // Formula: Old CB + (Toxins - T) + (Fillers*Qty - F) - B - AS applied to CB - BD applied to CB
+    const oldCB = parseFloat(cosmeticData.oldCosmeticBalance) || 0;
+    const tPayment = parseFloat(cosmeticData.toxinPayment) || 0;
+    const fPayment = parseFloat(cosmeticData.fillerPayment) || 0;
+    const bPayment = parseFloat(cosmeticData.cosmeticBalancePayment) || 0;
+    const bdToCB = cosmeticData.alleDestination === 'cb' ? (parseFloat(cosmeticData.alleAmount) || 0) : 0;
+    const asToCB = cosmeticData.aspireDestination === 'cb' ? (parseFloat(cosmeticData.aspireAmount) || 0) : 0;
+
+    const newCosmeticBalance =
+      oldCB
+      + (toxinsTotal - tPayment)     // Botox/Dysport cost minus T payment
+      + (fillersTotal - fPayment)    // Filler cost*qty minus F payment
+      - bPayment                     // B payment on router
+      - asToCB                       // Aspire points applied to CB
+      - bdToCB;                      // Alle/BD points applied to CB
 
     // Balance/Credit adjustment
     const balanceAdjustment = balanceCredit.type === 'balance' ? balanceCredit.amount : 0;
@@ -1038,6 +1052,15 @@ export default function NGDCheckout() {
       pointsAppliedToday,
       pointsToCB,
       newCosmeticBalance,
+      // CB breakdown components
+      cbOldBalance: oldCB,
+      cbToxinCharge: toxinsTotal,
+      cbToxinPayment: tPayment,
+      cbFillerCharge: fillersTotal,
+      cbFillerPayment: fPayment,
+      cbBalancePayment: bPayment,
+      cbAspireToCB: asToCB,
+      cbAlleBDToCB: bdToCB,
       balanceAdjustment,
       creditAdjustment,
       totalDue: Math.max(0, totalDue),
@@ -1728,7 +1751,18 @@ export default function NGDCheckout() {
 
           {hasCosmetics && (
             <div className="bg-blue-50 rounded-lg p-4">
-              <CalcRow label="New Cosmetic Balance" value={calculations.newCosmeticBalance} bold />
+              <h4 className="font-semibold text-ngd-dark mb-2">Cosmetic Balance</h4>
+              <CalcRow label="Old Cosmetic Balance" value={calculations.cbOldBalance} />
+              {calculations.cbToxinCharge > 0 && <CalcRow label="+ Toxin Cost (Botox/Dysport)" value={calculations.cbToxinCharge} indent />}
+              {calculations.cbToxinPayment > 0 && <CalcRow label="- T (Toxin Payment)" value={-calculations.cbToxinPayment} indent />}
+              {calculations.cbFillerCharge > 0 && <CalcRow label="+ Filler Cost (qty)" value={calculations.cbFillerCharge} indent />}
+              {calculations.cbFillerPayment > 0 && <CalcRow label="- F (Filler Payment)" value={-calculations.cbFillerPayment} indent />}
+              {calculations.cbBalancePayment > 0 && <CalcRow label="- B (Balance Payment)" value={-calculations.cbBalancePayment} indent />}
+              {calculations.cbAspireToCB > 0 && <CalcRow label="- AS (Aspire) to CB" value={-calculations.cbAspireToCB} indent />}
+              {calculations.cbAlleBDToCB > 0 && <CalcRow label="- BD (Alle) to CB" value={-calculations.cbAlleBDToCB} indent />}
+              <div className="border-t border-ngd-taupe/30 mt-2 pt-2">
+                <CalcRow label="New Cosmetic Balance" value={calculations.newCosmeticBalance} bold />
+              </div>
             </div>
           )}
 
