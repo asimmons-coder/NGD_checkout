@@ -42,3 +42,36 @@ select:focus,
 textarea:focus {
   outline: none;
 }
+
+/* Print styles - only show the receipt when printing */
+@media print {
+  body {
+    background: white !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hide everything except the receipt */
+  body > * {
+    visibility: hidden;
+  }
+
+  /* The receipt overlay and its content */
+  #patient-receipt,
+  #patient-receipt * {
+    visibility: visible !important;
+  }
+
+  #patient-receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px !important;
+  }
+
+  /* Hide screen-only elements */
+  .print\\:hidden {
+    display: none !important;
+  }
+}
