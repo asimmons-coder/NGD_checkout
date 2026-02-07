@@ -832,6 +832,7 @@ export default function NGDCheckout() {
     let pvSurgTotal = 0;
     let pathTotal = 0;
     let ocTotal = 0;
+    let procedureBreakdown = [];
 
     if (hasMedical && procedures.length > 0) {
       // Categorize procedures
@@ -875,6 +876,16 @@ export default function NGDCheckout() {
       pvSurgTotal = pvSurgReduced + sequentialTotal;
       pathTotal = pathCharges.reduce((sum, c) => sum + c.total, 0);
       ocTotal = ocCharge;
+
+      // Build procedure breakdown for summary display
+      procedures.forEach(proc => {
+        const codeData = PROCEDURE_CODES[proc.code];
+        const isManual = !codeData;
+        const price = isManual ? (proc.customPrice || 0) : (codeData.prices[insurerKey] || codeData.prices['OTHER'] || 0);
+        const qty = proc.qty || 1;
+        const desc = isManual ? 'Manual entry' : codeData.desc;
+        procedureBreakdown.push({ code: proc.code, desc, price, qty, total: price * qty });
+      });
 
       // Insurance parameters
       const deductible = parseFloat(insurance.deductible) || 0;
@@ -1061,6 +1072,7 @@ export default function NGDCheckout() {
       cbBalancePayment: bPayment,
       cbAspireToCB: asToCB,
       cbAlleBDToCB: bdToCB,
+      procedureBreakdown,
       balanceAdjustment,
       creditAdjustment,
       totalDue: Math.max(0, totalDue),
@@ -1730,6 +1742,19 @@ export default function NGDCheckout() {
           {hasMedical && (
             <div className="bg-ngd-light rounded-lg p-4">
               <h4 className="font-semibold text-ngd-dark mb-2">Medical</h4>
+              {calculations.procedureBreakdown.length > 0 && (
+                <div className="mb-3 pb-3 border-b border-ngd-taupe/20">
+                  <div className="text-xs font-medium text-ngd-gray mb-1">Procedures</div>
+                  {calculations.procedureBreakdown.map((proc) => (
+                    <CalcRow
+                      key={proc.code}
+                      label={`${proc.code} - ${proc.desc}${proc.qty > 1 ? ` x${proc.qty}` : ''}`}
+                      value={proc.total}
+                      dimmed
+                    />
+                  ))}
+                </div>
+              )}
               <CalcRow label="Deductible" value={calculations.deductibleCollected} />
               <CalcRow label="Copay" value={calculations.copayCollected} />
               <CalcRow label="Coinsurance" value={calculations.coinsuranceCollected} />
