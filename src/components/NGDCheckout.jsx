@@ -648,6 +648,7 @@ export default function NGDCheckout() {
   const [hasCosmetics, setHasCosmetics] = useState(false);
   const [hasProducts, setHasProducts] = useState(false);
   const [hasMedical, setHasMedical] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   // Patient Info
   const [patientInfo, setPatientInfo] = useState({
@@ -711,6 +712,7 @@ export default function NGDCheckout() {
 
   // Reset all state for new checkout
   const resetAllState = () => {
+    setShowReceipt(false);
     setHasCosmetics(false);
     setHasProducts(false);
     setHasMedical(false);
@@ -1796,6 +1798,13 @@ export default function NGDCheckout() {
           </div>
         </div>
 
+        <button
+          onClick={() => setShowReceipt(true)}
+          className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors mt-4"
+        >
+          Print Patient Receipt
+        </button>
+
         <div className="flex gap-4 mt-4">
           <button
             onClick={() => {
@@ -1819,6 +1828,204 @@ export default function NGDCheckout() {
       </Section>
     </div>
   );
+
+  // Print receipt
+  const handlePrintReceipt = () => {
+    window.print();
+  };
+
+  // Render Patient Receipt (print-friendly overlay)
+  const renderReceipt = () => {
+    const today = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+
+    // Build cosmetic line items for receipt
+    const cosmeticLineItems = [];
+    if (hasCosmetics) {
+      if (cosmeticData.toxinPayment > 0) {
+        cosmeticLineItems.push({ label: 'T (Toxin)', amount: cosmeticData.toxinPayment });
+      }
+      if (cosmeticData.fillerPayment > 0) {
+        cosmeticLineItems.push({ label: 'F (Filler)', amount: cosmeticData.fillerPayment });
+      }
+      if (cosmeticData.cosmeticBalancePayment > 0) {
+        cosmeticLineItems.push({ label: 'B (Cosmetic Balance)', amount: cosmeticData.cosmeticBalancePayment });
+      }
+      // Waivers
+      cosmeticServices.waivers.forEach(w => {
+        if (parseFloat(w.amount) > 0) {
+          cosmeticLineItems.push({ label: w.description || 'Waiver', amount: parseFloat(w.amount) });
+        }
+      });
+      // Other services (named)
+      Object.entries(cosmeticServices.other).forEach(([id, o]) => {
+        if ((o.price || 0) > 0) {
+          const svc = COSMETIC_SERVICES.other.find(s => s.id === id);
+          const qty = o.qty || 1;
+          cosmeticLineItems.push({
+            label: `${svc?.name || id}${qty > 1 ? ` x${qty}` : ''}`,
+            amount: (o.price || 0) * qty,
+          });
+        }
+      });
+      // Custom other services
+      (cosmeticServices.customOther || []).forEach(o => {
+        if ((o.price || 0) > 0) {
+          cosmeticLineItems.push({ label: o.name || 'Custom Service', amount: o.price });
+        }
+      });
+    }
+
+    const cosmeticSubtotal = cosmeticLineItems.reduce((sum, item) => sum + item.amount, 0);
+    const pointsToday = calculations.pointsAppliedToday;
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 print:bg-white print:static print:block">
+        <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto print:max-w-none print:max-h-none print:shadow-none print:rounded-none print:mx-0 print:overflow-visible">
+          {/* Screen-only header buttons */}
+          <div className="flex justify-between items-center p-4 border-b border-gray-200 print:hidden">
+            <button
+              onClick={() => setShowReceipt(false)}
+              className="text-ngd-gray hover:text-ngd-dark font-medium"
+            >
+              ← Back to Summary
+            </button>
+            <button
+              onClick={handlePrintReceipt}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Print
+            </button>
+          </div>
+
+          {/* Receipt content */}
+          <div className="p-6 print:p-0" id="patient-receipt">
+            {/* Receipt header */}
+            <div className="text-center mb-6">
+              <h2 className="text-xl font-bold text-ngd-dark">Novice Group Dermatology</h2>
+              <p className="text-sm text-ngd-gray mt-1">Patient Receipt</p>
+              <p className="text-sm text-ngd-gray">{today}</p>
+              {patientInfo.accountNumber && (
+                <p className="text-sm text-ngd-gray">Account: {patientInfo.accountNumber}</p>
+              )}
+            </div>
+
+            <div className="border-t border-gray-300 mb-4"></div>
+
+            {/* Cosmetic section */}
+            {hasCosmetics && cosmeticLineItems.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-semibold text-ngd-dark mb-2">Cosmetics</h3>
+                {cosmeticLineItems.map((item, idx) => (
+                  <div key={idx} className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">{item.label}</span>
+                    <span className="font-mono text-ngd-gray">{formatCurrencyAlways(item.amount)}</span>
+                  </div>
+                ))}
+                {pointsToday > 0 && (
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">Points Applied</span>
+                    <span className="font-mono text-ngd-gray">-{formatCurrencyAlways(pointsToday)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between py-1 text-sm font-semibold border-t border-gray-200 mt-1 pt-1">
+                  <span>Cosmetic Subtotal</span>
+                  <span className="font-mono">{formatCurrencyAlways(cosmeticSubtotal - pointsToday)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Products section */}
+            {hasProducts && selectedProducts.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-semibold text-ngd-dark mb-2">Products</h3>
+                {selectedProducts.map((product) => (
+                  <div key={product.id} className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">{product.name}</span>
+                    <span className="font-mono text-ngd-gray">{formatCurrencyAlways(product.price)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between py-1 text-sm font-semibold border-t border-gray-200 mt-1 pt-1">
+                  <span>Product Subtotal</span>
+                  <span className="font-mono">{formatCurrencyAlways(calculations.productTotal)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Medical section */}
+            {hasMedical && (
+              <div className="mb-4">
+                <h3 className="font-semibold text-ngd-dark mb-2">Medical</h3>
+                {calculations.procedureBreakdown.length > 0 && (
+                  <div className="mb-2 pb-2 border-b border-gray-100">
+                    <div className="text-xs text-ngd-gray mb-1">Procedures</div>
+                    {calculations.procedureBreakdown.map((proc) => (
+                      <div key={proc.code} className="flex justify-between py-0.5 text-sm">
+                        <span className="text-ngd-gray">{proc.code} - {proc.desc}{proc.qty > 1 ? ` x${proc.qty}` : ''}</span>
+                        <span className="font-mono text-ngd-gray">{formatCurrencyAlways(proc.total)}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {calculations.deductibleCollected > 0 && (
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">Deductible</span>
+                    <span className="font-mono text-ngd-gray">{formatCurrencyAlways(calculations.deductibleCollected)}</span>
+                  </div>
+                )}
+                {calculations.copayCollected > 0 && (
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">Copay</span>
+                    <span className="font-mono text-ngd-gray">{formatCurrencyAlways(calculations.copayCollected)}</span>
+                  </div>
+                )}
+                {calculations.coinsuranceCollected > 0 && (
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">Coinsurance</span>
+                    <span className="font-mono text-ngd-gray">{formatCurrencyAlways(calculations.coinsuranceCollected)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between py-1 text-sm font-semibold border-t border-gray-200 mt-1 pt-1">
+                  <span>Medical Subtotal</span>
+                  <span className="font-mono">{formatCurrencyAlways(calculations.medicalDue)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Adjustments */}
+            {(calculations.balanceAdjustment > 0 || calculations.creditAdjustment > 0) && (
+              <div className="mb-4">
+                <h3 className="font-semibold text-ngd-dark mb-2">Adjustments</h3>
+                {calculations.balanceAdjustment > 0 && (
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">Balance Owed</span>
+                    <span className="font-mono text-ngd-gray">{formatCurrencyAlways(calculations.balanceAdjustment)}</span>
+                  </div>
+                )}
+                {calculations.creditAdjustment > 0 && (
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-ngd-gray">Credit</span>
+                    <span className="font-mono text-ngd-gray">-{formatCurrencyAlways(calculations.creditAdjustment)}</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Total */}
+            <div className="border-t-2 border-ngd-dark mt-4 pt-3">
+              <div className="flex justify-between text-lg font-bold">
+                <span>TOTAL DUE TODAY</span>
+                <span className="font-mono">{formatCurrencyAlways(calculations.totalDue)}</span>
+              </div>
+            </div>
+
+            <div className="text-center mt-6 text-xs text-ngd-gray print:mt-8">
+              <p>Thank you for choosing Novice Group Dermatology</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // Close flow and go back to patient info
   const handleCloseFlow = () => {
@@ -2037,6 +2244,9 @@ export default function NGDCheckout() {
             onClose={handleCloseFlow}
           />
         )}
+
+        {/* Patient Receipt Overlay */}
+        {showReceipt && renderReceipt()}
       </div>
     </div>
   );
