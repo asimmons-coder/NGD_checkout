@@ -174,7 +174,7 @@ const PROCEDURE_CODES = {
   '11600': { desc: 'Exc malig trunk/arm/leg ≤0.5cm', prices: { AETNA: 238.8, 'AH&L': 188.19, BC: 314.77, BCN: 314.77, CIGNA: 188.19, HAP: 188.19, MR: 198.37, PRIOR: 269.37, UHC: 221.03, PTPAY: 298, OTHER: 314.77 }},
   '11601': { desc: 'Exc malig trunk/arm/leg 0.6-1cm', prices: { AETNA: 276.46, 'AH&L': 226.1, BC: 287.7, BCN: 287.7, CIGNA: 226.1, HAP: 226.1, MR: 227.32, PRIOR: 312.21, UHC: 263.92, PTPAY: 268, OTHER: 287.7 }},
   '11602': { desc: 'Exc malig trunk/arm/leg 1.1-2cm', prices: { AETNA: 295.9, 'AH&L': 246.49, BC: 308.7, BCN: 308.7, CIGNA: 246.49, HAP: 246.49, MR: 239.87, PRIOR: 335, UHC: 286.34, PTPAY: 293, OTHER: 308.7 }},
-  '11603': { desc: 'Exc malig trunk/arm/leg 2.1-3cm', prices: { AETNA: 338.76, 'AH&L': 246.49, BC: 446.32, BCN: 446.32, CIGNA: 246.49, HAP: 246.49, MR: 277.72, PRIOR: 381.94, UHC: 328.49, PTPAY: 440, OTHER: 446.32 }},
+  '11603': { desc: 'Exc malig trunk/arm/leg 2.1-3cm', prices: { AETNA: 338.76, 'AH&L': 280.90, BC: 446.32, BCN: 446.32, CIGNA: 280.90, HAP: 280.90, MR: 277.72, PRIOR: 381.94, UHC: 328.49, PTPAY: 440, OTHER: 446.32 }},
   '11604': { desc: 'Exc malig trunk/arm/leg 3.1-4cm', prices: { AETNA: 422.92, 'AH&L': 323.84, BC: 440.28, BCN: 440.28, CIGNA: 323.84, HAP: 323.84, MR: 350.00, PRIOR: 478.00, UHC: 490.45, PTPAY: 405, OTHER: 440.28 }},
   '11606': { desc: 'Exc malig trunk/arm/leg >4cm', prices: { AETNA: 528.40, 'AH&L': 412.58, BC: 550.02, BCN: 550.02, CIGNA: 412.58, HAP: 412.58, MR: 440.00, PRIOR: 597.00, UHC: 623.95, PTPAY: 495, OTHER: 550.02 }},
 
@@ -212,7 +212,7 @@ const PROCEDURE_CODES = {
   '17266': { desc: 'DEF Malig trunk/arm/leg >4cm', prices: { AETNA: 360.08, 'AH&L': 290.35, BC: 376.20, BCN: 376.20, CIGNA: 290.35, HAP: 290.35, MR: 300.00, PRIOR: 408.00, UHC: 432.99, PTPAY: 315, OTHER: 376.20 }},
 
   // Destruction - Malignant (ED&C) Scalp/Neck/Hands/Feet/Genitalia
-  '17270': { desc: 'DEF Malig scalp/neck/hf ≤0.5cm', prices: { AETNA: 181.44, 'AH&L': 149.69, BC: 189.84, BCN: 189.84, CIGNA: 149.69, HAP: 149.69, MR: 146.52, PRIOR: 206.02, UHC: 173.3, PTPAY: 215, OTHER: 189.84 }},
+  '17270': { desc: 'DEF Malig scalp/neck/hf ≤0.5cm', prices: { AETNA: 181.44, 'AH&L': 146.69, BC: 189.84, BCN: 189.84, CIGNA: 149.69, HAP: 149.69, MR: 146.52, PRIOR: 206.02, UHC: 173.3, PTPAY: 215, OTHER: 189.84 }},
   '17271': { desc: 'DEF Malig scalp/neck/hf 0.6-1cm', prices: { AETNA: 201.54, 'AH&L': 163.53, BC: 210.42, BCN: 210.42, CIGNA: 163.53, HAP: 163.53, MR: 161.69, PRIOR: 228.35, UHC: 188, PTPAY: 245, OTHER: 210.42 }},
   '17272': { desc: 'DEF Malig scalp/neck/hf 1.1-2cm', prices: { AETNA: 228.42, 'AH&L': 186.21, BC: 237.72, BCN: 237.72, CIGNA: 186.21, HAP: 186.21, MR: 183.36, PRIOR: 257.97, UHC: 214.6, PTPAY: 267, OTHER: 237.72 }},
   '17273': { desc: 'DEF Malig scalp/neck/hf 2.1-3cm', prices: { AETNA: 253.42, 'AH&L': 207.84, BC: 264.18, BCN: 264.18, CIGNA: 207.84, HAP: 207.84, MR: 204.15, PRIOR: 286.69, UHC: 240.02, PTPAY: 297, OTHER: 264.18 }},
@@ -343,12 +343,12 @@ const PROCEDURE_CODES = {
   '88341': { desc: 'Immunohistochem (addl)', prices: { AETNA: 102.98, 'AH&L': 0, BC: 153.92, BCN: 0, CIGNA: 62.18, HAP: 62.18, MR: 26.67, PRIOR: 145, UHC: 91.84, PTPAY: 0, OTHER: 153.92 }, isPath: true },
 
   // Unit-Based (Injections)
-  'J0585': { desc: 'Botox per unit (medical)', prices: { AETNA: 6.60, 'AH&L': 6.32, BC: 6.38, BCN: 6.38, CIGNA: 6.32, HAP: 6.32, MR: 0, PRIOR: 6.65, UHC: 6.23, PTPAY: 7, OTHER: 6.38 }, isUnitBased: true },
+  'J0585': { desc: 'Botox per unit (medical)', prices: { AETNA: 6.60, 'AH&L': 6.51, BC: 6.38, BCN: 6.38, CIGNA: 6.51, HAP: 6.51, MR: 0, PRIOR: 6.76, UHC: 6.23, PTPAY: 7, OTHER: 6.38 }, isUnitBased: true },
   'J0586': { desc: 'Dysport per unit', prices: { AETNA: 1.50, 'AH&L': 1.44, BC: 1.45, BCN: 1.45, CIGNA: 1.44, HAP: 1.44, MR: 0, PRIOR: 1.50, UHC: 1.42, PTPAY: 2, OTHER: 1.45 }, isUnitBased: true },
-  'J1020': { desc: 'Injection IM 1cc - 20mg', prices: { AETNA: 7.3, 'AH&L': 7.04, BC: 2.97, BCN: 2.97, CIGNA: 7.04, HAP: 7.04, MR: 8.01, PRIOR: 7.3, UHC: 1.49, PTPAY: 34, OTHER: 2.97 }, isUnitBased: true },
+  'J1020': { desc: 'Injection IM 1cc - 20mg', prices: { AETNA: 7.3, 'AH&L': 7.25, BC: 2.97, BCN: 2.97, CIGNA: 7.25, HAP: 7.25, MR: 8.01, PRIOR: 7.3, UHC: 1.49, PTPAY: 34, OTHER: 2.97 }, isUnitBased: true },
   'J1100': { desc: 'Dexamethasone per 4mg', prices: { AETNA: 1.20, 'AH&L': 1.10, BC: 1.15, BCN: 1.15, CIGNA: 1.10, HAP: 1.10, MR: 0, PRIOR: 1.20, UHC: 1.08, PTPAY: 2, OTHER: 1.15 }, isUnitBased: true },
   'J3301': { desc: 'Kenalog 10mg', prices: { AETNA: 8.50, 'AH&L': 8.10, BC: 8.20, BCN: 8.20, CIGNA: 8.10, HAP: 8.10, MR: 0, PRIOR: 8.50, UHC: 8.00, PTPAY: 10, OTHER: 8.20 }, isUnitBased: true },
-  'J7308': { desc: 'PDT (Photodynamic Therapy)', prices: { AETNA: 408.88, 'AH&L': 392.32, BC: 401.85, BCN: 401.85, CIGNA: 392.32, HAP: 392.32, MR: 389.83, PRIOR: 411.95, UHC: 393.46, PTPAY: 390, OTHER: 401.85 }},
+  'J7308': { desc: 'PDT (Photodynamic Therapy)', prices: { AETNA: 408.88, 'AH&L': 389.83, BC: 401.85, BCN: 401.85, CIGNA: 389.83, HAP: 389.83, MR: 389.83, PRIOR: 404.54, UHC: 393.46, PTPAY: 390, OTHER: 401.85 }},
 
   // Injections - Lesions
   '11900': { desc: 'Inject intralesional ≤7 lesions', prices: { AETNA: 68.91, 'AH&L': 55.43, BC: 72.24, BCN: 72.24, CIGNA: 55.43, HAP: 55.43, MR: 56.59, PRIOR: 78.4, UHC: 64.05, PTPAY: 78, OTHER: 72.24 }},
